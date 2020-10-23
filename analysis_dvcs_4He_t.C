@@ -59,11 +59,11 @@ void analysis_dvcs_4He_t::Loop()
       gStyle->SetTitleSize(0.06,"xy");
    
       const int n_con = 1;
-      const int n_xB = 3;
+      const int n_xB = 5;
       const int n_t = 7;
     
-      double xB_lims[4] = {-0.05, 0.17, 0.23, 0.5};
-      double t_lims[n_t+1] = {-0.05, 0.064, 0.075, 0.086, 0.10,  0.125,  0.17, 0.95};
+      double xB_lims[n_xB+1] = {0.0017, 0.0028, 0.0035, 0.0045, 0.008, 0.1};
+      double t_lims[n_t+1] = {0.01, 0.013, 0.017, 0.023, 0.03,  0.041,  0.06, 0.3};
 
   // 20 days at 1.5e34
       TH1F * h_dvcs_N_p[n_con][n_xB][n_t];
@@ -82,15 +82,15 @@ void analysis_dvcs_4He_t::Loop()
 
       for(int i=0; i<n_con; i++)
       {
-         hh_xB[i] = new TH1D(Form("hh_xB[%d]",i),"", 150, 0, 0.11);
-         hh_Q2[i] = new TH1D(Form("hh_Q2[%d]",i),"", 150, 3.5, 32.0);
-
-         h_Q2_tt_Coh[i]  = new TH2D(Form("h_Q2_tt_Coh[%d]",i),"",150, 3.5, 32, 150, 0.004, 0.1);
-         h_Q2_xB_Coh[i]  = new TH2D(Form("h_Q2_xB_Coh[%d]",i),"",150, 0.0, 0.11, 150, 3.5, 32);
-         h_tt_xB_Coh[i]  = new TH2D(Form("h_tt_xB_Coh[%d]",i)," ",150, 0.004, 1, 150, 0.0, 0.11);
+         h_Q2_tt_Coh[i]  = new TH2D(Form("h_Q2_tt_Coh[%d]",i),"",150, 3.5, 32, 150, 0.003, 0.1);
+         h_Q2_xB_Coh[i]  = new TH2D(Form("h_Q2_xB_Coh[%d]",i),"",150, 0.001, 0.11, 150, 3.5, 32);
+         h_tt_xB_Coh[i]  = new TH2D(Form("h_tt_xB_Coh[%d]",i)," ",150, 0.0033, 1, 150, 0.001, 0.11);
          for(int j=0; j<n_xB; j++)
          {
-            for(int k=0; k<n_t; k++)
+           hh_xB[j] = new TH1D(Form("hh_xB[%d]",j),"", 150, 0, 0.11);
+           hh_Q2[j] = new TH1D(Form("hh_Q2[%d]",j),"", 150, 3.5, 32.0);
+
+           for(int k=0; k<n_t; k++)
             {
             
                h_dvcs_N_p[i][j][k] = new TH1F(Form("h_dvcs_N_p[%d][%d][%d]",i,j,k)," ", 12,0,360);
@@ -225,9 +225,9 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
               c6->SetLogx();
               c6->SetLogy();
                  for(int i=0; i<n_xB+1;i++)
-                     l->DrawLine(0.05,  xB_lims[i], t_lims[n_t], xB_lims[i]);
+                     l->DrawLine(t_lims[0],  xB_lims[i], t_lims[n_t], xB_lims[i]);
                  for(int i=0; i<n_t+1;i++)
-                        l->DrawLine(t_lims[i], 0.05, t_lims[i], 0.5);
+                        l->DrawLine(t_lims[i], xB_lims[0], t_lims[i], xB_lims[n_xB]);
           c6->Print(Form("figs/png/coh_t_xB%d.png",ii));
           c6->Print(Form("figs/pdf/coh_t_xB%d.pdf",ii));
          }
