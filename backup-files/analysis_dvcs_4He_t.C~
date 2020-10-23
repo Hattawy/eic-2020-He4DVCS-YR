@@ -1,0 +1,513 @@
+#define analysis_dvcs_4He_t_cxx
+#include "analysis_dvcs_4He_t.h"
+#include <iostream>
+#include <fstream>
+#include <TH2.h>
+#include <TStyle.h>
+#include <TCanvas.h>
+#include <math.h>
+#include <TH1D.h>
+#include <TH2D.h>
+#include <TF1.h>
+#include <TFile.h>
+#include <time.h>
+#include <TMultiGraph.h>
+#include <TVector3.h>
+#include <TMath.h>
+#include <TProfile.h>
+#include "TCutG.h"
+#include <TGraphErrors.h>
+#include <TLatex.h>
+#include "TGraph.h"
+#include<TLine.h>
+#include <TLorentzVector.h>
+#include "TSystem.h"
+#include "TLegend.h"
+#include<algorithm>
+#include<vector>
+#include<vector>
+#include "plot_ALU_projections.C"
+
+using namespace std;
+
+//void plot_ALU_projections(vector<vector<vector<double>>> mean_t, 
+//                          vector<vector<vector<double>>> mean_t_err, 
+//                          vector<vector<vector<double>>> alu_t_x, 
+//
+                          vector<vector<vector<double>>> alu_t_x_err);
+//void plot_CFF_projections();
+
+void analysis_dvcs_4He_t::Loop()
+{
+
+      gStyle->SetOptStat(0);
+      gStyle->SetOptFit(0);
+      gStyle->SetLabelSize(0.03,"xyz"); // size of axis value font
+      gStyle->SetTitleSize(0.035,"xyz"); // size of axis title font
+      gStyle->SetTitleFont(22,"xyz"); // font option
+      gStyle->SetLabelFont(22,"xyz");
+      //gStyle->SetTitleOffSet(1.2,"y");
+      gStyle->SetCanvasBorderMode(0);
+      gStyle->SetCanvasBorderSize(0);
+      gStyle->SetPadBottomMargin(0.16); //margins...
+      gStyle->SetPadTopMargin(0.16);
+      gStyle->SetPadLeftMargin(0.16);
+      gStyle->SetPadRightMargin(0.16);
+      gStyle->SetFrameBorderMode(0);
+      gStyle->SetPaperSize(20,24);
+      gStyle->SetLabelSize(0.05,"xy");
+      gStyle->SetTitleSize(0.06,"xy");
+   
+      const int n_con = 3;
+      const int n_xB = 3;
+      const int n_t = 8;
+      const int n_phi = 13;
+    
+      double xB_lims[n_xB+1] = {0.095, 0.18, 0.22, 0.65};
+      double t_lims[n_t+1] = {0.05, 0.07, 0.08, 0.09, 0.11,  0.14,  0.22,  0.4, 0.95};
+
+  // 20 days at 1.5e34
+      TH1F * h_dvcs_N_p[n_con][n_xB][n_t];
+      TH1F * h_dvcs_N_m[n_con][n_xB][n_t];
+
+      TH1D *h_t_xB_Coh[n_con][n_xB][n_t];
+      TH1D *h_t_Q2_Coh[n_con][n_xB][n_t];
+      TH1D *h_t_t_Coh[n_con][n_xB][n_t];
+ 
+      TH2D *h_Q2_xB_Coh[n_con];
+      TH2D *h_tt_xB_Coh[n_con];
+      for(int i=0; i<n_con; i++)
+      {
+
+         h_Q2_xB_Coh[i]  = new TH2D(Form("h_Q2_xB_Coh[%d]",i),
+                                             "Q^{2} vs. x_{B}; ; [GeV^{2}/c^{2}]",
+                                              150, 0, 0.5, 150, 0, 10);
+         h_tt_xB_Coh[i]  = new TH2D(Form("h_tt_xB_Coh[%d]",i), " ",150, 0.045, 1.1, 150, 0.05, 0.8);
+         for(int j=0; j<n_xB; j++)
+         {
+            for(int k=0; k<n_t; k++)
+            {
+            
+               h_dvcs_N_p[i][j][k] = new TH1F(Form("h_dvcs_N_p[%d][%d][%d]",i,j,k)," ", 12,0,360);
+               h_dvcs_N_m[i][j][k] = new TH1F(Form("h_dvcs_N_m[%d][%d][%d]",i,j,k)," ", 12,0,360);
+ 
+               h_t_Q2_Coh[i][j][k] = new TH1D(Form("h_t_Q2_Coh[%d][%d][%d]",i,j,k),"Q^{2} of e^{4}He#gamma events",150, 0.5, 10);
+               h_t_xB_Coh[i][j][k] = new TH1D(Form("h_t_xB_Coh[%d][%d][%d]",i,j,k),"x_{B} of e^{4}He#gamma events",150, 0.05, 0.7);
+               h_t_t_Coh[i][j][k]  = new TH1D(Form("h_t_t_Coh[%d][%d][%d]",i,j,k),"-t of e^{4}He#gamma events",150, 0.0, 0.7);
+          }
+        }
+      }
+
+   TH1D *h_xsec = new TH1D("h_xsec","BH cross section",150, 0, 2.0);
+   
+   if (fChain == 0) return;
+
+   Long64_t nentries = fChain->GetEntriesFast();
+   Long64_t nbytes = 0, nb = 0;
+   
+   double alert_lum = 1.5e+34;
+   double eg6_lum = 1.94935e+33;
+   double lum_ratio = alert_lum/eg6_lum;
+
+   double eg6_yield = 3500.0/(23.0*24.0*60*60.0); // event/second
+   double eg6_eff = 0.30; 
+
+   double N_days = 20.0;
+   double beam_time = N_days * 24.0 *60.0 *60.0;
+
+   double N_events_exp = (eg6_yield/eg6_eff) * (alert_lum/eg6_lum) * beam_time;
+
+    
+   int N_e_exp1 = (int) N_events_exp;
+   int N_e_exp2 = (int) (2.0 * N_events_exp);
+   int N_e_exp3 = (int) (3.0 * N_events_exp);
+   cout<< N_e_exp1 <<"     "<<N_e_exp2<<"     "<<N_e_exp3<<endl;
+ 
+for (Long64_t jentry=0; jentry<nentries;jentry++)
+  {
+
+    if (jentry% 100000 == 0) printf("still running %d \n",(int)jentry);
+      if (jentry== 200000) break;
+
+      Long64_t ientry = LoadTree(jentry);
+      if (ientry < 0) break;
+      nb = fChain->GetEntry(jentry);   nbytes += nb;
+      // if (Cut(ientry) < 0) continue;
+         h_xsec->Fill(XSEC);
+         int helicity;
+         if(hel == 1) helicity = 1;
+         else if (hel == 0) helicity = -1;
+
+
+         int which_xB = -1;
+         int which_t  = -1;
+       
+         for(int ii=0; ii<n_xB; ii++){
+            if(xB_lims[ii]<=xb && xb <xB_lims[ii+1]) which_xB = ii ; }
+       
+         for(int ii=0; ii<n_t; ii++){
+            if(t_lims[ii]<=t && t <t_lims[ii+1]) which_t = ii ; }
+       
+
+         if(jentry < N_e_exp1){
+                       
+              h_tt_xB_Coh[0]         ->Fill(t, xb);
+              if (which_xB != -1 && which_t != -1 )
+               {
+                   if (helicity == 1 )      h_dvcs_N_p[0][which_xB][which_t]->Fill(phi_h,1.0); 
+                   else if (helicity == -1) h_dvcs_N_m[0][which_xB][which_t]->Fill(phi_h,1.0);
+
+                   h_t_Q2_Coh[0][which_xB][which_t]->Fill(Q2);
+                   h_t_xB_Coh[0][which_xB][which_t]->Fill(xb);
+                   h_t_t_Coh[0][which_xB][which_t]->Fill(t);
+                 }
+           }
+
+         if(jentry < N_e_exp2){
+                       
+              h_tt_xB_Coh[1]         ->Fill(t, xb);
+              if (which_xB != -1 && which_t != -1 )
+               {
+                   if (helicity == 1 )      h_dvcs_N_p[1][which_xB][which_t]->Fill(phi_h,1.0); 
+                   else if (helicity == -1) h_dvcs_N_m[1][which_xB][which_t]->Fill(phi_h,1.0);
+
+                   h_t_Q2_Coh[1][which_xB][which_t]->Fill(Q2);
+                   h_t_xB_Coh[1][which_xB][which_t]->Fill(xb);
+                   h_t_t_Coh[1][which_xB][which_t]->Fill(t);
+                 }
+           }
+
+        if(jentry < N_e_exp3){
+               
+              h_tt_xB_Coh[2]         ->Fill(t, xb);
+              if (which_xB != -1 && which_t != -1 )
+               {
+                   if (helicity == 1 )      h_dvcs_N_p[2][which_xB][which_t]->Fill(phi_h,1.0); 
+                   else if (helicity == -1) h_dvcs_N_m[2][which_xB][which_t]->Fill(phi_h,1.0);
+
+                   h_t_Q2_Coh[2][which_xB][which_t]->Fill(Q2);
+                   h_t_xB_Coh[2][which_xB][which_t]->Fill(xb);
+                   h_t_t_Coh[2][which_xB][which_t]->Fill(t);
+                 }
+           }
+
+   }
+
+    vector<vector<vector<double>>> alu_t_x     ;
+    vector<vector<vector<double>>> alu_t_x_err ;
+    vector<vector<vector<double>>> mean_t      ;
+    vector<vector<vector<double>>> mean_x      ;
+    vector<vector<vector<double>>> mean_Q2     ;
+    vector<vector<vector<double>>> mean_t_err  ;
+    vector<vector<vector<double>>> mean_x_err  ;
+    vector<vector<vector<double>>> mean_Q2_err ;
+
+    alu_t_x    .resize(n_con); 
+    alu_t_x_err.resize(n_con);
+    mean_t     .resize(n_con);
+    mean_x     .resize(n_con);
+    mean_Q2    .resize(n_con);
+    mean_t_err .resize(n_con);
+    mean_x_err .resize(n_con);
+    mean_Q2_err.resize(n_con);
+
+    for(int ii=0; ii<n_con; ii++){
+
+       alu_t_x[ii]    .resize(n_xB); 
+       alu_t_x_err[ii].resize(n_xB);
+       mean_t[ii]     .resize(n_xB);
+       mean_x[ii]     .resize(n_xB);
+       mean_Q2[ii]    .resize(n_xB);
+       mean_t_err[ii] .resize(n_xB);
+       mean_x_err[ii] .resize(n_xB);
+       mean_Q2_err[ii].resize(n_xB);
+   
+       for(int jj=0; jj<n_xB; jj++){
+
+          alu_t_x[ii][jj]     .resize(n_t); 
+          alu_t_x_err[ii][jj] .resize(n_t);
+          mean_t[ii][jj]      .resize(n_t);
+          mean_x[ii][jj]      .resize(n_t);
+          mean_Q2[ii][jj]     .resize(n_t);
+          mean_t_err[ii][jj]  .resize(n_t);
+          mean_x_err[ii][jj]  .resize(n_t);
+          mean_Q2_err[ii][jj] .resize(n_t);
+ 
+       }
+    }
+
+
+
+
+    for(int ii=0; ii<n_con; ii++){
+       for(int jj=0; jj<n_xB; jj++){
+          for(int kk=0; kk<n_t; kk++){
+          
+             mean_Q2[ii][jj][kk] = h_t_Q2_Coh[ii][jj][kk]->GetMean();
+             mean_x[ii][jj][kk]  = h_t_xB_Coh[ii][jj][kk]->GetMean();
+             mean_t[ii][jj][kk]  = h_t_t_Coh[ii][jj][kk]->GetMean();
+
+             mean_Q2_err[ii][jj][kk] = 0.0;
+             mean_x_err[ii][jj][kk] = 0.0;
+             mean_t_err[ii][jj][kk] = 0.0;
+          }
+       }
+    }
+
+
+    double c0_BH[n_con][n_xB][n_t], c1_BH[n_con][n_xB][n_t], c2_BH[n_con][n_xB][n_t]; 
+    double A0[n_con][n_xB][n_t], A1[n_con][n_xB][n_t], A2[n_con][n_xB][n_t], A3[n_con][n_xB][n_t];
+    double Im[n_con][n_xB][n_t], Im_err[n_con][n_xB][n_t], Re[n_con][n_xB][n_t], Re_err[n_con][n_xB][n_t];
+
+//    TF1 *ffit[n_con][n_xB][n_t];
+//   for(int ii=0; ii<n_con; ii++){
+//    for(int jj=0; jj<n_xB; jj++){
+//       for(int kk=0; kk<n_t; kk++){
+
+//         Im[ii][jj][kk] = 10*jj + 5.0;
+//         Im_err[ii][jj][kk] = 0.0;
+//         Re[ii][jj][kk] = -10*jj - 5.0;
+//         Re_err[ii][jj][kk] = 0.0;
+
+//         calculate_CFF(mean_Q2[ii][jj][kk], mean_x[ii][jj][kk], -1*mean_t[ii][jj][kk], 
+//                       A0[ii][jj][kk], A1[ii][jj][kk], A2[ii][jj][kk], A3[ii][jj][kk], 
+//                       c0_BH[ii][jj][kk], c1_BH[ii][jj][kk], c2_BH[ii][jj][kk]);
+
+//         ffit[ii][jj][kk] = new TF1(Form("ffit[%d][%d][%d]",ii,jj,kk), Form("%0.7f*[0]*sin(x*3.14/180.0) / (%0.7f+ %0.7f*cos(x*3.14/180.0) + %0.7f*cos(2*x*3.14/180.0) + %0.7f*([0]*[0] + [1]*[1]) + %0.7f*[1] + %0.7f*[1]*cos(x*3.14/180.0))", 
+//                                    A0[ii][jj][kk], c0_BH[ii][jj][kk], c1_BH[ii][jj][kk],c2_BH[ii][jj][kk], 
+//                                    A1[ii][jj][kk], A2[ii][jj][kk], A3[ii][jj][kk]),0.0,360.0);
+//         ffit[ii][jj][kk]->SetLineColor(kRed);
+
+//         ffit[ii][jj][kk]->SetParName(0,"Im(H_{A})");
+//         ffit[ii][jj][kk]->SetParName(1,"Re(H_{A})");
+//        }
+//      }
+// }
+
+
+   TCanvas *c3 = new TCanvas("c3","",1000,1300 );
+            c3->Divide(3,8,-0.00005,-0.00005); 
+            c3->SetGrid();
+
+   // as a function of -t in xB bins
+   for(int ii=0; ii<3; ii++){
+    for(int jj=0; jj<n_xB; jj++){
+       for(int kk=0; kk<n_t; kk++){
+            c3->SetGrid();
+         if (jj == 0) c3->cd(3*kk +1);
+         if (jj == 1) c3->cd(3*kk +2);
+         if (jj == 2) c3->cd(3*kk +3);
+         
+         h_dvcs_N_p[ii][jj][kk]->Sumw2(); 
+         h_dvcs_N_m[ii][jj][kk]->Sumw2();
+         
+         TH1* hsum=(TH1*)h_dvcs_N_p[ii][jj][kk]->Clone("hsum");
+         TH1* hdif=(TH1*)h_dvcs_N_p[ii][jj][kk]->Clone("hdif");
+         hsum->Add(h_dvcs_N_m[ii][jj][kk]);
+         hdif->Add(h_dvcs_N_m[ii][jj][kk],-1);
+         
+         TH1* hasy=(TH1*)hdif->Clone("hasy");
+              hasy->Divide(hsum);
+              //hasy->SetTitle("Coherent A_{LU}");
+              hasy->GetYaxis()->SetTitle("A_{LU}");
+              hasy->GetYaxis()->SetTitleSize(0.07);
+              hasy->GetYaxis()->CenterTitle(true);
+              hasy->GetXaxis()->SetTitle("#phi_{h} [deg.]");
+              hasy->GetXaxis()->CenterTitle(true);
+              hasy->GetXaxis()->SetTitleSize(0.07);
+              hasy->SetMarkerStyle(21);
+              if(ii==0) { hasy->SetMarkerColor(kBlack); hasy->SetLineColor(kBlack);} 
+              if(ii==1) { hasy->SetMarkerColor(kBlue);  hasy->SetLineColor(kBlue); }
+              if(ii==2) { hasy->SetMarkerColor(kRed);   hasy->SetLineColor(kRed);  }
+              hasy->GetXaxis()->SetLimits(-5.0,365.0);
+              hasy->GetYaxis()->SetRangeUser(-0.7,0.7);
+              if(ii==0) hasy->Draw();
+              if(ii==1) hasy->Draw("same");
+              if(ii==2) hasy->Draw("same");
+
+          TLatex *l2= new TLatex(10.0,-0.25,Form("%.2f< x_{B} <%.2f",xB_lims[jj], xB_lims[jj+1]));
+                  l2->Draw("same");
+          TLatex *l3= new TLatex(10.0,-0.45,Form("%.2f< -t <%.2f",t_lims[kk], t_lims[kk+1]));
+                  l3->Draw("same");
+
+          TF1 *myfit;
+          if(kk<7) myfit = new TF1("myfit","[0]*sin(x*3.1416/180.0)/(1 + [1]*cos(x*3.1416/180.0))",0.0,360.0);
+          else if(kk==7) myfit = new TF1("myfit","[0]*sin(x*3.1416/180.0)",0.0,360.0);
+               myfit->SetLineColor(kRed);
+               myfit->SetLineWidth(2);
+               hasy->Fit("myfit");
+
+               alu_t_x[ii][jj][kk] = 0.1 *(2-jj)-0.3;
+               alu_t_x_err[ii][jj][kk] =  myfit->GetParError(0);
+
+               if( jj==1 && kk==1 ) 
+               {
+                  TCanvas *c66 = new TCanvas("c6","",650,550 );
+                           c66->cd();
+
+                  hasy->Draw();
+                  myfit->Draw("same");
+                  l2->Draw("same");
+                  l3->Draw("same");
+                  c66->Print("fig/BSA_Coherent_Phi_high_stat.png");
+                  c66->Print("fig/BSA_Coherent_Phi_high_stat.pdf");
+               }
+
+               if( jj==1 && kk==5 ) 
+               {
+                  TCanvas *c66 = new TCanvas("c6","",650,550 );
+                           c66->cd();
+
+                  hasy->Draw();
+                  myfit->Draw("same");
+                  l2->Draw("same");
+                  l3->Draw("same");
+                  c66->Print("fig/BSA_Coherent_Phi_low_stat.png");
+                  c66->Print("fig/BSA_Coherent_Phi_low_stat.pdf");
+               }
+
+       }
+    }
+   }
+
+  c3->Print("fig/BSA_Coherent_Phi_t.pdf");
+
+         
+  TCanvas *c55 = new TCanvas("c55","",750,600 ); 
+           c55->cd();  
+  
+  h_xsec->Draw();
+  //c55->SetLogx(); 
+  c55->Print("xsec_bh.png");
+  c55->Print("xsec_bh.C");
+
+  TLine *l = new TLine();
+         l->SetLineWidth(2);
+         l->SetLineColor(kBlack);
+
+  TCanvas *c6 = new TCanvas("c6","",650,550 );
+
+   for(int ii=0; ii<n_con; ii++){
+      
+      c6->cd();
+         h_tt_xB_Coh[ii]   ->Draw("colz");
+         h_tt_xB_Coh[ii]   ->GetXaxis()->CenterTitle(true);
+         h_tt_xB_Coh[ii]   ->SetXTitle("-t [GeV^{2}]");
+         h_tt_xB_Coh[ii]   ->GetXaxis()->SetTitleSize(0.07);
+         h_tt_xB_Coh[ii]   ->GetYaxis()->CenterTitle(true);
+         h_tt_xB_Coh[ii]   ->GetYaxis()->SetTitleSize(0.07);
+         h_tt_xB_Coh[ii]   ->SetYTitle("x_{B}");
+            c6->SetLogz();
+            c6->SetLogx();
+               for(int i=0; i<n_xB+1;i++)
+                   l->DrawLine(0.05,  xB_lims[i], t_lims[n_t], xB_lims[i]);
+               for(int i=0; i<n_t+1;i++)
+                      l->DrawLine(t_lims[i], 0.095, t_lims[i], 0.65);
+        c6->Print(Form("fig/coh_t_xB%d.png",ii));
+        c6->Print(Form("fig/coh_t_xB%d.pdf",ii));
+       }
+
+  plot_ALU_projections(mean_t, mean_t_err, alu_t_x, alu_t_x_err);
+
+
+// // as a function of -t in xB bins
+//  for(int jj=0; jj<n_xB; jj++){
+//     for(int kk=0; kk<n_t; kk++){
+//       
+//     //           // BSA_Coherent_Phi->Fit(Form("ffit[%d][%d]",jj,kk),"E Q I"); 
+//     //           // Im[jj][kk] =  ffit[jj][kk]->GetParameter(0);
+//     //           // Re[jj][kk] =  ffit[jj][kk]->GetParameter(1);   
+//     //           // Im_err[jj][kk] = ffit[jj][kk]->GetParError(0);
+//     //           // Re_err[jj][kk] = ffit[jj][kk]->GetParError(1);
+//     //              //alu_t_x_err[jj][kk] =  myfit->GetParError(0);
+//     //              // calculate_ALU(mean_Q2[jj][kk], mean_x[jj][kk], -1*mean_t[jj][kk], 
+//     //              //              Im[jj][kk], Im_err[jj][kk], Re[jj][kk], Re_err[jj][kk],
+//     //              //              alu_t_x[jj][kk], alu_t_x_err[jj][kk]);
+//                c3->Print(Form("fig/BSA_Coherent_Phi_%d_t%d.png",jj,kk));
+//               // c3->Print(Form("fig/BSA_Coherent_Phi_%d_t%d.C",jj,kk));
+//     
+//     }
+//  }
+
+
+//        TCanvas *c4 = new TCanvas("c4","",750,600 ); c4->cd();  c4->SetGrid();
+//        TMultiGraph *mg = new TMultiGraph();
+//                     mg->Add(BSA_Coherent_Phi_t_x[0]);
+//                     mg->Add(BSA_Coherent_Phi_t_x[1]);
+//                     mg->Add(BSA_Coherent_Phi_t_x[2]);
+
+//                  mg->Draw("AP");
+//                  mg->SetTitle("Coherent A_{LU} projections");
+//                  mg->GetYaxis()->SetTitle("A_{LU}(90^{#circ})");
+//                  mg->GetXaxis()->SetTitle("-t [GeV^{2}/c^{2}]");
+//                  mg->GetXaxis()->SetLimits(0,0.4);
+//                  mg->GetYaxis()->SetRangeUser(0.15,0.5);
+//                  c4->SetGrid();
+//                
+//         TLegend* leg_t_Coh = new TLegend(0.65,0.75,0.9,0.9);
+//                  leg_t_Coh-> SetNColumns(1);  
+//                  leg_t_Coh->AddEntry(BSA_Coherent_Phi_t_x[0],Form("%.2f <x_{B}< %.2f", xB_lims[0], xB_lims[1]),"P");
+//                  //leg_t_Coh->AddEntry(BSA_Coherent_Phi_t_x[1],Form("%.2f <x_{B}< %.2f", xB_lims[1], xB_lims[2]),"P");
+//                  //leg_t_Coh->AddEntry(BSA_Coherent_Phi_t_x[2],Form("%.2f <x_{B}< %.2f", xB_lims[2], xB_lims[3]),"P");
+//                  leg_t_Coh->Draw(); 
+//                 
+//           c4->Print("fig/BSA1_projections_Coherent_t.png");
+//           c4->Print("fig/BSA1_projections_Coherent_t.C");
+
+
+
+//     TGraphErrors *Im_CFF_Coherent_t[n_xB];
+//                   Im_CFF_Coherent_t[0]  = new TGraphErrors(6, mean_t[0], Im[0], mean_t_err[0], Im_err[0]);
+//                   Im_CFF_Coherent_t[0]->SetMarkerStyle(20);
+//                   Im_CFF_Coherent_t[0]->SetMarkerColor(kBlack);
+//                   Im_CFF_Coherent_t[1]  = new TGraphErrors(6, mean_t[1], Im[1], mean_t_err[1], Im_err[1]);
+//                   Im_CFF_Coherent_t[1]->SetMarkerStyle(21);
+//                   Im_CFF_Coherent_t[1]->SetMarkerColor(kRed);
+//                   Im_CFF_Coherent_t[2]  = new TGraphErrors(6, mean_t[2], Im[2], mean_t_err[2], Im_err[2]);
+//                   Im_CFF_Coherent_t[2]->SetMarkerStyle(22);
+//                   Im_CFF_Coherent_t[2]->SetMarkerColor(kBlue);
+
+//     TGraphErrors *Re_CFF_Coherent_t[n_xB];
+//                   Re_CFF_Coherent_t[0]  = new TGraphErrors(6, mean_t[0], Re[0], mean_t_err[0], Re_err[0]);
+//                   Re_CFF_Coherent_t[0]->SetMarkerStyle(20);
+//                   Re_CFF_Coherent_t[0]->SetMarkerColor(kBlack);
+//                   Re_CFF_Coherent_t[1]  = new TGraphErrors(6, mean_t[1], Re[1], mean_t_err[1], Re_err[1]);
+//                   Re_CFF_Coherent_t[1]->SetMarkerStyle(21);
+//                   Re_CFF_Coherent_t[1]->SetMarkerColor(kRed);
+//                   Re_CFF_Coherent_t[2]  = new TGraphErrors(6, mean_t[2], Re[2], mean_t_err[2], Re_err[2]);
+//                   Re_CFF_Coherent_t[2]->SetMarkerStyle(22);
+//                   Re_CFF_Coherent_t[2]->SetMarkerColor(kBlue);
+
+
+//        TCanvas *c5 = new TCanvas("c5","",750,600 ); c5->cd();  c5->SetGrid();
+//        TMultiGraph *mmg = new TMultiGraph();
+//                     mmg->Add(Im_CFF_Coherent_t[0]);
+//                     mmg->Add(Im_CFF_Coherent_t[1]);
+//                     mmg->Add(Im_CFF_Coherent_t[2]);
+//                    // mmg->Add(Re_CFF_Coherent_t[0]);
+//                    // mmg->Add(Re_CFF_Coherent_t[1]);
+//                    // mmg->Add(Re_CFF_Coherent_t[2]);
+
+//                  mmg->Draw("AP");
+//                  mmg->SetTitle("CFF H_{A} projections");
+//                  //mmg->GetYaxis()->SetTitle("H_{A}(Re, Im))");
+//                  mmg->GetYaxis()->SetTitle("Im(H_{A})");
+//                  mmg->GetXaxis()->SetTitle("-t [GeV^{2}/c^{2}]");
+//                  mmg->GetXaxis()->SetLimits(0,0.4);
+//                  mmg->GetYaxis()->SetRangeUser(-60,60);
+//                  c5->SetGrid();
+//                
+//         TLegend* leg_t_cff = new TLegend(0.65,0.75,0.9,0.9);
+//                  leg_t_cff-> SetNColumns(1);  
+//                  leg_t_cff->AddEntry(Im_CFF_Coherent_t[0],Form("%.2f <x_{B}< %.2f", xB_lims[0], xB_lims[1]),"P");
+//                  leg_t_cff->AddEntry(Im_CFF_Coherent_t[1],Form("%.2f <x_{B}< %.2f", xB_lims[1], xB_lims[2]),"P");
+//                  leg_t_cff->AddEntry(Im_CFF_Coherent_t[2],Form("%.2f <x_{B}< %.2f", xB_lims[2], xB_lims[3]),"P");
+//                  leg_t_cff->Draw(); 
+//                 
+//           c5->Print("fig/CFF_projections_Coherent_t.png");
+//           c5->Print("fig/CFF_projections_Coherent_t.C");
+
+  }
+
+
+
