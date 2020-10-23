@@ -82,12 +82,12 @@ void analysis_dvcs_4He_t::Loop()
 
       for(int i=0; i<n_con; i++)
       {
-         hh_xB[i] = new TH1D(Form("hh_xB[%d]",i),"", 150, 0, 0.1);
-         hh_Q2[i] = new TH1D(Form("hh_Q2[%d]",i),"", 150, 3, 32.0);
+         hh_xB[i] = new TH1D(Form("hh_xB[%d]",i),"", 150, 0, 0.13);
+         hh_Q2[i] = new TH1D(Form("hh_Q2[%d]",i),"", 150, 3.5, 32.0);
 
-         h_Q2_tt_Coh[i]  = new TH2D(Form("h_Q2_tt_Coh[%d]",i),"",150, 3, 32, 150, 0.01, 0.1);
-         h_Q2_xB_Coh[i]  = new TH2D(Form("h_Q2_xB_Coh[%d]",i),"",150, 0.0, 0.1, 150, 3, 32);
-         h_tt_xB_Coh[i]  = new TH2D(Form("h_tt_xB_Coh[%d]",i)," ",150, 0.01, 1, 150, 0.0, 0.1);
+         h_Q2_tt_Coh[i]  = new TH2D(Form("h_Q2_tt_Coh[%d]",i),"",150, 3.5, 32, 150, 0.001, 0.1);
+         h_Q2_xB_Coh[i]  = new TH2D(Form("h_Q2_xB_Coh[%d]",i),"",150, 0.0, 0.13, 150, 3.5, 32);
+         h_tt_xB_Coh[i]  = new TH2D(Form("h_tt_xB_Coh[%d]",i)," ",150, 0.001, 1, 150, 0.0, 0.13);
          for(int j=0; j<n_xB; j++)
          {
             for(int k=0; k<n_t; k++)
