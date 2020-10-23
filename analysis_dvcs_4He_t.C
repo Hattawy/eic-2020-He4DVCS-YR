@@ -85,9 +85,9 @@ void analysis_dvcs_4He_t::Loop()
          hh_xB[i] = new TH1D(Form("hh_xB[%d]",i),"", 150, 0, 0.1);
          hh_Q2[i] = new TH1D(Form("hh_Q2[%d]",i),"", 150, 4, 32.0);
 
-         h_Q2_tt_Coh[i]  = new TH2D(Form("h_Q2_tt_Coh[%d]",i),"",150, 4, 32, 150, 0.0, 0.1);
+         h_Q2_tt_Coh[i]  = new TH2D(Form("h_Q2_tt_Coh[%d]",i),"",150, 4, 32, 150, 0.01, 0.1);
          h_Q2_xB_Coh[i]  = new TH2D(Form("h_Q2_xB_Coh[%d]",i),"",150, 0.0, 0.1, 150, 4, 32);
-         h_tt_xB_Coh[i]  = new TH2D(Form("h_tt_xB_Coh[%d]",i)," ",150, 0.0, 1, 150, 0.0, 0.1);
+         h_tt_xB_Coh[i]  = new TH2D(Form("h_tt_xB_Coh[%d]",i)," ",150, 0.01, 1, 150, 0.0, 0.1);
          for(int j=0; j<n_xB; j++)
          {
             for(int k=0; k<n_t; k++)
@@ -165,7 +165,6 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
            h_Q2_xB_Coh[ii]   ->GetXaxis()->SetTitleSize(0.07);
            h_Q2_xB_Coh[ii]   ->SetXTitle("x_{B}");
           c66->SetLogx();
-          c66->SetLogy();
           c66->Print(Form("figs/png/coh_Q2_xB%d.png",ii));
           c66->Print(Form("figs/pdf/coh_Q2_xB%d.pdf",ii));
         
@@ -178,7 +177,6 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
            h_Q2_tt_Coh[ii]   ->GetYaxis()->SetTitleSize(0.07);
            h_Q2_tt_Coh[ii]   ->SetYTitle("-t [GeV^{2}]");
           c66->SetLogx();
-          c66->SetLogy();
           c66->Print(Form("figs/png/coh_Q2_tt%d.png",ii));
           c66->Print(Form("figs/pdf/coh_Q2_tt%d.pdf",ii));
 
