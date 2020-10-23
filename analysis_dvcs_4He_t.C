@@ -62,8 +62,8 @@ void analysis_dvcs_4He_t::Loop()
       const int n_xB = 3;
       const int n_t = 7;
     
-      double xB_lims[4] = {0.0, 0.17, 0.23, 0.5};
-      double t_lims[n_t+1] = {0.05, 0.064, 0.075, 0.086, 0.10,  0.125,  0.17, 0.95};
+      double xB_lims[4] = {-0.05, 0.17, 0.23, 0.5};
+      double t_lims[n_t+1] = {-0.05, 0.064, 0.075, 0.086, 0.10,  0.125,  0.17, 0.95};
 
   // 20 days at 1.5e34
       TH1F * h_dvcs_N_p[n_con][n_xB][n_t];
