@@ -85,9 +85,9 @@ void analysis_dvcs_4He_t::Loop()
          hh_xB[i] = new TH1D(Form("hh_xB[%d]",i),"", 150, 0, 0.11);
          hh_Q2[i] = new TH1D(Form("hh_Q2[%d]",i),"", 150, 3.5, 32.0);
 
-         h_Q2_tt_Coh[i]  = new TH2D(Form("h_Q2_tt_Coh[%d]",i),"",150, 3.5, 32, 150, 0.002, 0.1);
+         h_Q2_tt_Coh[i]  = new TH2D(Form("h_Q2_tt_Coh[%d]",i),"",150, 3.5, 32, 150, 0.004, 0.1);
          h_Q2_xB_Coh[i]  = new TH2D(Form("h_Q2_xB_Coh[%d]",i),"",150, 0.0, 0.11, 150, 3.5, 32);
-         h_tt_xB_Coh[i]  = new TH2D(Form("h_tt_xB_Coh[%d]",i)," ",150, 0.002, 1, 150, 0.0, 0.11);
+         h_tt_xB_Coh[i]  = new TH2D(Form("h_tt_xB_Coh[%d]",i)," ",150, 0.004, 1, 150, 0.0, 0.11);
          for(int j=0; j<n_xB; j++)
          {
             for(int k=0; k<n_t; k++)
@@ -223,6 +223,7 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
            h_tt_xB_Coh[ii]   ->SetYTitle("x_{B}");
               c6->SetLogz();
               c6->SetLogx();
+              c6->SetLogy();
                  for(int i=0; i<n_xB+1;i++)
                      l->DrawLine(0.05,  xB_lims[i], t_lims[n_t], xB_lims[i]);
                  for(int i=0; i<n_t+1;i++)
@@ -479,7 +480,7 @@ void Find_CFF( double xB, double t, double &Im, double &Re){
         if( 0.10< xB && xB<0.18 ){
              Im  = (60.77 - pow(5.08 *t, 6)) * exp( -13.2*t );
              Re  = (-8.62 + 15.86*t - pow( -3.59*t, 3)) * exp( -7.27*t);
-             }
+        }
        else if( 0.18< xB && xB<0.222 ){
                 Im  = (39.0 - pow( 5.45*t, 5)) * exp( -12.83*t );
                 Re  = (-12.53 + 33.88*t - pow( -0.11*t, 3)) * exp( -7.4*t);
