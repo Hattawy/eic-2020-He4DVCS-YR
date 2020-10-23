@@ -62,7 +62,7 @@ void analysis_dvcs_4He_t::Loop()
       const int n_xB = 3;
       const int n_t = 7;
     
-      double xB_lims[4] = {0.05, 0.17, 0.23, 0.5};
+      double xB_lims[4] = {0.0, 0.17, 0.23, 0.5};
       double t_lims[n_t+1] = {0.05, 0.064, 0.075, 0.086, 0.10,  0.125,  0.17, 0.95};
 
   // 20 days at 1.5e34
@@ -86,8 +86,8 @@ void analysis_dvcs_4He_t::Loop()
          hh_Q2[i] = new TH1D(Form("hh_Q2[%d]",i),"", 150, 0, 50.0);
 
          h_Q2_tt_Coh[i]  = new TH2D(Form("h_Q2_tt_Coh[%d]",i),"",150, 0.9, 50, 150, 0.0, 1);
-         h_Q2_xB_Coh[i]  = new TH2D(Form("h_Q2_xB_Coh[%d]",i),"",150, 0.05, 0.5, 150, 0.9, 50);
-         h_tt_xB_Coh[i]  = new TH2D(Form("h_tt_xB_Coh[%d]",i)," ",150, 0.045, 1, 150, 0.0, 0.65);
+         h_Q2_xB_Coh[i]  = new TH2D(Form("h_Q2_xB_Coh[%d]",i),"",150, 0.0, 0.5, 150, 0.9, 50);
+         h_tt_xB_Coh[i]  = new TH2D(Form("h_tt_xB_Coh[%d]",i)," ",150, 0.0, 1, 150, 0.0, 0.65);
          for(int j=0; j<n_xB; j++)
          {
             for(int k=0; k<n_t; k++)
