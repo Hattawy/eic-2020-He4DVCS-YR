@@ -164,6 +164,7 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
            h_Q2_xB_Coh[ii]   ->GetXaxis()->CenterTitle(true);
            h_Q2_xB_Coh[ii]   ->GetXaxis()->SetTitleSize(0.07);
            h_Q2_xB_Coh[ii]   ->SetXTitle("x_{B}");
+          c66->SetLogx();
           c66->Print(Form("figs/png/coh_Q2_xB%d.png",ii));
           c66->Print(Form("figs/pdf/coh_Q2_xB%d.pdf",ii));
         
@@ -184,6 +185,7 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
            hh_xB[ii]   ->SetXTitle("x_{B}");
            hh_xB[ii]   ->GetXaxis()->SetTitleSize(0.07);
            hh_xB[ii]   ->SetLineWidth(2);
+          c66->SetLogy();
           c66->Print(Form("figs/png/coh_xB_%d.png",ii));
           c66->Print(Form("figs/pdf/coh_xB_%d.pdf",ii));
 
@@ -193,6 +195,7 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
            hh_Q2[ii]   ->SetXTitle("Q^{2} [GeV^{2}]");
            hh_Q2[ii]   ->GetXaxis()->SetTitleSize(0.07);
            hh_Q2[ii]   ->SetLineWidth(2);
+          c66->SetLogy();
           c66->Print(Form("figs/png/coh_Q2_%d.png",ii));
           c66->Print(Form("figs/pdf/coh_Q2_%d.pdf",ii));
 
