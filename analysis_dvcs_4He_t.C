@@ -32,6 +32,7 @@
 
 using namespace std;
 
+int Find_Run_Number(const char*);
 void Find_CFF( double xB, double t, double &Im, double &Re);
 void Calculate_CFF(double Q2, double xB, double t, double &A0, 
                    double &A1, double &A2, double &A3, 
@@ -109,46 +110,57 @@ void analysis_dvcs_4He_t::Loop()
 
    Long64_t nentries = fChain->GetEntriesFast();
    Long64_t nbytes = 0, nb = 0;
+   bool run_tag[2] = {false, false};
    
 for (Long64_t jentry=0; jentry<nentries;jentry++)
   {
 
-    if (jentry% 1000 == 0) printf("still running %d \n",(int)jentry);
+    if (jentry% 200000 == 0) printf("still running %d \n",(int)jentry);
      // if (jentry== 200000) break;
 
       Long64_t ientry = LoadTree(jentry);
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
-      // if (Cut(ientry) < 0) continue;
-         int helicity = 1;
-         //if(hel == 1) helicity = 1;
-         //else if (hel == 0) helicity = -1;
+         
+      int RunNumber = -999;
+      const char *input_file_name;
+      input_file_name = fChain->GetCurrentFile()->GetName();
+      RunNumber = Find_Run_Number(input_file_name);
 
-         int which_Q2 = 0;
-         int which_xB = -1;
-         int which_t  = -1;
-       
-         for(int ii=0; ii<n_xB; ii++){
-            if(xB_lims[ii]<=Xbj && Xbj <xB_lims[ii+1]) which_xB = ii ; }
-       
-         for(int ii=0; ii<n_t; ii++){
-            if(t_lims[ii]<=t && t <t_lims[ii+1]) which_t = ii ; }
-       
-              h_tt_xB_Coh[which_Q2]         ->Fill(t, Xbj);
-              h_Q2_xB_Coh[which_Q2]         ->Fill(Xbj, Q2);
-              h_Q2_tt_Coh[which_Q2]         ->Fill( Q2,t);
+      if (run_tag[RunNumber-1] == false ){
+         cout<<input_file_name<<" run number "<< RunNumber<<endl;
+         run_tag[RunNumber-1] = true;
+      }
+      
+      int helicity = 0;
+      if(RunNumber% 2 == 1) helicity = 1;
+      else if (RunNumber% 2 == 0) helicity = -1;
 
-              if (which_xB > -1 && which_t > -1 ) {
-                   if (helicity == 1 )      h_dvcs_N_p[which_Q2][which_xB][which_t]->Fill(phih,1.0); 
-                   else if (helicity == -1) h_dvcs_N_m[which_Q2][which_xB][which_t]->Fill(phih,1.0);
+      int which_Q2 = 0;
+      int which_xB = -1;
+      int which_t  = -1;
+      
+      for(int ii=0; ii<n_xB; ii++){
+         if(xB_lims[ii]<=Xbj && Xbj <xB_lims[ii+1]) which_xB = ii ; }
+      
+      for(int ii=0; ii<n_t; ii++){
+         if(t_lims[ii]<=t && t <t_lims[ii+1]) which_t = ii ; }
+      
+           h_tt_xB_Coh[which_Q2]         ->Fill(t, Xbj);
+           h_Q2_xB_Coh[which_Q2]         ->Fill(Xbj, Q2);
+           h_Q2_tt_Coh[which_Q2]         ->Fill( Q2,t);
 
-                   hh_xB[which_xB]        ->Fill(Xbj);
-                   hh_Q2[which_xB]        ->Fill(Q2);
+           if (which_xB > -1 && which_t > -1 ) {
+                if (helicity == 1 )      h_dvcs_N_p[which_Q2][which_xB][which_t]->Fill(phih,1.0); 
+                else if (helicity == -1) h_dvcs_N_m[which_Q2][which_xB][which_t]->Fill(phih,1.0);
 
-                   h_t_Q2_Coh[which_Q2][which_xB][which_t]->Fill(Q2);
-                   h_t_xB_Coh[which_Q2][which_xB][which_t]->Fill(Xbj);
-                   h_t_t_Coh[which_Q2][which_xB][which_t]->Fill(t);
-                 }
+                hh_xB[which_xB]        ->Fill(Xbj);
+                hh_Q2[which_xB]        ->Fill(Q2);
+
+                h_t_Q2_Coh[which_Q2][which_xB][which_t]->Fill(Q2);
+                h_t_xB_Coh[which_Q2][which_xB][which_t]->Fill(Xbj);
+                h_t_t_Coh[which_Q2][which_xB][which_t]->Fill(t);
+              }
 
    }
 
@@ -323,18 +335,23 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
     }
 
 
-   TCanvas *c3 = new TCanvas("c3","",1000,1300 );
-            c3->Divide(3,7,-0.00005,-0.00005); 
+   TCanvas *c3 = new TCanvas("c3","",1300,1000 );
+            c3->Divide(n_t,n_xB,-0.00005,-0.00005); 
             c3->SetGrid();
-/*
+
    // as a function of -t in xB bins
+   int counter =1;
    for(int ii=0; ii<1; ii++){
-    for(int jj=0; jj<n_xB; jj++){
+    for(int jj=n_xB-1; jj>=0; jj--){
        for(int kk=0; kk<n_t; kk++){
             c3->SetGrid();
-         if (jj == 0) c3->cd(3*kk +1);
-         if (jj == 1) c3->cd(3*kk +2);
-         if (jj == 2) c3->cd(3*kk +3);
+            c3->cd(counter);
+            counter++;
+//         if (jj == 0) c3->cd(5*kk +1);
+//         if (jj == 1) c3->cd(5*kk +2);
+//         if (jj == 2) c3->cd(5*kk +3);
+//         if (jj == 3) c3->cd(5*kk +4);
+//         if (jj == 4) c3->cd(5*kk +5);
          
          h_dvcs_N_p[ii][jj][kk]->Sumw2(); 
          h_dvcs_N_m[ii][jj][kk]->Sumw2();
@@ -358,14 +375,14 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
               if(ii==1) { hasy->SetMarkerColor(kBlue);  hasy->SetLineColor(kBlue); }
               if(ii==2) { hasy->SetMarkerColor(kRed);   hasy->SetLineColor(kRed);  }
               hasy->GetXaxis()->SetLimits(-5.0,365.0);
-              hasy->GetYaxis()->SetRangeUser(-0.7,0.7);
+              hasy->GetYaxis()->SetRangeUser(-0.3,0.3);
               if(ii==0) hasy->Draw();
               if(ii==1) hasy->Draw("same");
               if(ii==2) hasy->Draw("same");
 
-          TLatex *l2= new TLatex(10.0,-0.25,Form("%.2f< x_{B} <%.2f",xB_lims[jj], xB_lims[jj+1]));
+          TLatex *l2= new TLatex(10.0,-0.1,Form("%.4f< x_{B} <%.4f",xB_lims[jj], xB_lims[jj+1]));
                   l2->Draw("same");
-          TLatex *l3= new TLatex(10.0,-0.45,Form("%.2f< -t <%.2f",t_lims[kk], t_lims[kk+1]));
+          TLatex *l3= new TLatex(10.0,-0.2,Form("%.4f< -t <%.4f",t_lims[kk], t_lims[kk+1]));
                   l3->Draw("same");
 
           TF1 *myfit;
@@ -373,7 +390,7 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
           else if(kk==7) myfit = new TF1("myfit","[0]*sin(x*3.1416/180.0)",0.0,360.0);
           myfit->SetLineColor(kRed);
           myfit->SetLineWidth(2);
-
+/*
           double  A0, A1, A2, A3, c0_BH, c1_BH, c2_BH; 
           Calculate_CFF(mean_Q2[ii][jj][kk], mean_x[ii][jj][kk], -1.0*mean_t[ii][jj][kk], 
                         A0, A1, A2, A3, c0_BH, c1_BH, c2_BH);
@@ -386,10 +403,11 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
            ffit->SetParName(0,"Im(H_{A})");
            ffit->SetParName(1,"Re(H_{A})");
 
-
+*/
 
           // fit with a sin and cosin function ------------------------------------
-        //hasy->Fit("myfit");
+        hasy->Fit("myfit");
+        /*
         double IM_CFF; ;
         double RE_CFF;;
         Find_CFF(mean_x[ii][jj][kk], abs(mean_t[ii][jj][kk]), IM_CFF, RE_CFF);
@@ -445,15 +463,14 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
              c66->Print("figs/png/BSA_Coherent_Phi_low_stat.png");
              c66->Print("figs/pdf/BSA_Coherent_Phi_low_stat.pdf");
           }
-
+*/
        }
     }
    }
 
+    c3->Print("figs/png/BSA_Coherent_xB_t_phi.png");
+    c3->Print("figs/pdf/BSA_Coherent_xB_t_phi.pdf");
 
-    c3->Print("figs/png/BSA_Coherent_Phi_t.png");
-    c3->Print("figs/pdf/BSA_Coherent_Phi_t.pdf");
- */
 
   vector<double> M_XB;   M_XB.resize(n_xB);
   vector<double> M_Q2;   M_Q2.resize(n_xB);
@@ -620,4 +637,19 @@ void Calculate_CFF(double Q2, double xB, double t,
 
 }
 
+int Find_Run_Number(const char* input_file_name){
+
+int RunNumber= 0;
+int fullNameLength = strlen(input_file_name);
+string StringRunNumber;
+
+   int  first_numberPosition = fullNameLength - 8;
+
+   for (int i = first_numberPosition; i<first_numberPosition+3; i++)
+     StringRunNumber += input_file_name[i];
+
+     std::istringstream iss(StringRunNumber);
+     iss >> RunNumber;
+return RunNumber;
+}
 
