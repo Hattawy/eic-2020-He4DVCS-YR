@@ -313,6 +313,12 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
        }
     }
 
+
+    int ncc=1;
+    ofstream myfile;
+    myfile.open ("Q2_xB_t_mean_values.txt");
+    myfile << "bin #"<<"  "<<"<Q2>"<<"   "<<"<xB>"<<"   "<<"<-t>"<<"\n";
+
     for(int ii=0; ii<1; ii++){
        for(int jj=0; jj<n_xB; jj++){
           for(int kk=0; kk<n_t; kk++){
@@ -334,10 +340,15 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
           // c66->Print(Form("figs/slices/coh_t%d_%d_%d.png",ii,jj,kk));
 
 
+    
+             myfile <<ncc<<"  "<<h_t_Q2_Coh[ii][jj][kk]->GetMean()<<"   "<<h_t_xB_Coh[ii][jj][kk]->GetMean()<<"   "<<h_t_t_Coh[ii][jj][kk]->GetMean()<<"\n";
+    
+             ncc++;
 
           }
        }
     }
+myfile.close();
 
 
    TCanvas *c3 = new TCanvas("c3","",1300,1000 );
