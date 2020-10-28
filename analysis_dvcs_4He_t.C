@@ -114,7 +114,8 @@ void analysis_dvcs_4He_t::Loop()
 
    Long64_t nentries = fChain->GetEntriesFast();
    Long64_t nbytes = 0, nb = 0;
-   bool run_tag[2] = {false, false};
+   bool run_tag[10] = {false, false, false, false, false,
+                       false, false, false, false, false};
    
 for (Long64_t jentry=0; jentry<nentries;jentry++)
   {
