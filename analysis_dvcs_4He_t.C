@@ -60,11 +60,15 @@ void analysis_dvcs_4He_t::Loop()
       gStyle->SetTitleSize(0.06,"xy");
    
       const int n_con = 1;
-      const int n_xB = 8;
-      const int n_t = 9;
+      const int n_xB = 9;
+      const int n_t = 13;
     
-      double xB_lims[n_xB+1] = {0.0023, 0.0028, 0.0033, 0.0038, 0.0045, 0.0054, 0.0065, 0.009, 0.08};
-      double t_lims[n_t+1] = {0.01, 0.013, 0.017, 0.022, 0.028, 0.04, 0.06, 0.09, 0.16, 0.36};
+      double xB_lims[n_xB+1] = {0.0023, 0.0028, 0.0033, 0.004, 0.0048, 0.0057, 0.0068, 0.01, 0.015, 0.08};
+      double t_lims[n_t+1] = {0.01, 0.0125, 0.016, 
+                              0.02, 0.025, 0.031, 0.04, 
+                              0.05, 0.067, 0.090, 
+                              0.12, 0.160, 0.21, 
+                              0.36};
 
   // 20 days at 1.5e34
       TH1F * h_dvcs_N_p[n_con][n_xB][n_t];
