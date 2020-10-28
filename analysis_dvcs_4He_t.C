@@ -60,11 +60,11 @@ void analysis_dvcs_4He_t::Loop()
       gStyle->SetTitleSize(0.06,"xy");
    
       const int n_con = 1;
-      const int n_xB = 5;
-      const int n_t = 7;
+      const int n_xB = 8;
+      const int n_t = 9;
     
-      double xB_lims[n_xB+1] = {0.0017, 0.0028, 0.0035, 0.0045, 0.008, 0.1};
-      double t_lims[n_t+1] = {0.01, 0.013, 0.017, 0.023, 0.03,  0.041,  0.06, 0.3};
+      double xB_lims[n_xB+1] = {0.0023, 0.0028, 0.0033, 0.0038, 0.0045, 0.0054, 0.0065, 0.009, 0.08};
+      double t_lims[n_t+1] = {0.01, 0.013, 0.017, 0.022, 0.028, 0.04, 0.06, 0.09, 0.16, 0.36};
 
   // 20 days at 1.5e34
       TH1F * h_dvcs_N_p[n_con][n_xB][n_t];
@@ -83,13 +83,13 @@ void analysis_dvcs_4He_t::Loop()
 
       for(int i=0; i<n_con; i++)
       {
-         h_Q2_tt_Coh[i]  = new TH2D(Form("h_Q2_tt_Coh[%d]",i),"",150, 3.5, 32, 150, 0.003, 0.1);
-         h_Q2_xB_Coh[i]  = new TH2D(Form("h_Q2_xB_Coh[%d]",i),"",150, 0.001, 0.11, 150, 3.5, 32);
-         h_tt_xB_Coh[i]  = new TH2D(Form("h_tt_xB_Coh[%d]",i)," ",150, 0.0033, 1, 150, 0.001, 0.11);
+         h_Q2_tt_Coh[i]  = new TH2D(Form("h_Q2_tt_Coh[%d]",i),"",500, 3.5, 32, 500, 0.003, 0.1);
+         h_Q2_xB_Coh[i]  = new TH2D(Form("h_Q2_xB_Coh[%d]",i),"",500, 0.001, 0.11, 500, 3.5, 32);
+         h_tt_xB_Coh[i]  = new TH2D(Form("h_tt_xB_Coh[%d]",i),"",500, 0.006, 1, 500, 0.0017, 0.11);
          for(int j=0; j<n_xB; j++)
          {
-           hh_xB[j] = new TH1D(Form("hh_xB[%d]",j),"", 150, 0, 0.11);
-           hh_Q2[j] = new TH1D(Form("hh_Q2[%d]",j),"", 150, 3.5, 32.0);
+           hh_xB[j] = new TH1D(Form("hh_xB[%d]",j),"", 300, 0, 0.11);
+           hh_Q2[j] = new TH1D(Form("hh_Q2[%d]",j),"", 300, 3.5, 32.0);
 
            for(int k=0; k<n_t; k++)
             {
@@ -97,9 +97,9 @@ void analysis_dvcs_4He_t::Loop()
                h_dvcs_N_p[i][j][k] = new TH1F(Form("h_dvcs_N_p[%d][%d][%d]",i,j,k)," ", 12,0,360);
                h_dvcs_N_m[i][j][k] = new TH1F(Form("h_dvcs_N_m[%d][%d][%d]",i,j,k)," ", 12,0,360);
  
-               h_t_Q2_Coh[i][j][k] = new TH1D(Form("h_t_Q2_Coh[%d][%d][%d]",i,j,k),"",150, 0.5, 32);
-               h_t_xB_Coh[i][j][k] = new TH1D(Form("h_t_xB_Coh[%d][%d][%d]",i,j,k),"",150, 0.0, 0.1);
-               h_t_t_Coh[i][j][k]  = new TH1D(Form("h_t_t_Coh[%d][%d][%d]",i,j,k),"",150, 0.0, 0.7);
+               h_t_Q2_Coh[i][j][k] = new TH1D(Form("h_t_Q2_Coh[%d][%d][%d]",i,j,k),"",300, 0.5, 32);
+               h_t_xB_Coh[i][j][k] = new TH1D(Form("h_t_xB_Coh[%d][%d][%d]",i,j,k),"",300, 0.0, 0.1);
+               h_t_t_Coh[i][j][k]  = new TH1D(Form("h_t_t_Coh[%d][%d][%d]",i,j,k),"",300, 0.0, 0.7);
           }
         }
       }
