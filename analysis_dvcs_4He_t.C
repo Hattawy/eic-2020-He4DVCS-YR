@@ -114,13 +114,14 @@ void analysis_dvcs_4He_t::Loop()
 
    Long64_t nentries = fChain->GetEntriesFast();
    Long64_t nbytes = 0, nb = 0;
-   bool run_tag[10] = {false, false, false, false, false,
-                       false, false, false, false, false};
+   const int n_runs = 22;
+   bool run_tag[n_runs];
+   for (int i=0; i<n_runs; i++){ run_tag[i]  = false; }
    
 for (Long64_t jentry=0; jentry<nentries;jentry++)
   {
 
-    if (jentry% 200000 == 0) printf("still running %d \n",(int)jentry);
+    if (jentry% 1000000 == 0) printf("still running %d \n",(int)jentry);
      // if (jentry== 200000) break;
 
       Long64_t ientry = LoadTree(jentry);
