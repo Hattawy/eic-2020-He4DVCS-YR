@@ -82,19 +82,19 @@ void analysis_dvcs_4He_t::Loop()
       TH2D *h_Q2_tt_Coh[n_con];
       TH2D *h_tt_xB_Coh[n_con];
 
-      TH1D *hh_xB[n_xB];
-      TH1D *hh_Q2[n_xB];
+      TH1D *hh_xB[n_con];
+      TH1D *hh_Q2[n_con];
 
       for(int i=0; i<n_con; i++)
       {
-         h_Q2_tt_Coh[i]  = new TH2D(Form("h_Q2_tt_Coh[%d]",i),"",500, 3.5, 32, 500, 0.003, 0.1);
+         h_Q2_tt_Coh[i]  = new TH2D(Form("h_Q2_tt_Coh[%d]",i),"",500, 3.5, 32, 500, 0.006, 1);
          h_Q2_xB_Coh[i]  = new TH2D(Form("h_Q2_xB_Coh[%d]",i),"",500, 0.001, 0.11, 500, 3.5, 32);
          h_tt_xB_Coh[i]  = new TH2D(Form("h_tt_xB_Coh[%d]",i),"",500, 0.006, 1, 500, 0.0017, 0.11);
-         for(int j=0; j<n_xB; j++)
-         {
-           hh_xB[j] = new TH1D(Form("hh_xB[%d]",j),"", 300, 0, 0.11);
-           hh_Q2[j] = new TH1D(Form("hh_Q2[%d]",j),"", 300, 3.5, 32.0);
+         hh_xB[i] = new TH1D(Form("hh_xB[%d]",i),"", 300, 0, 0.11);
+         hh_Q2[i] = new TH1D(Form("hh_Q2[%d]",i),"", 300, 3.5, 32.0);
 
+        for(int j=0; j<n_xB; j++)
+         {
            for(int k=0; k<n_t; k++)
             {
             
@@ -152,16 +152,16 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
       for(int ii=0; ii<n_t; ii++){
          if(t_lims[ii]<=t && t <t_lims[ii+1]) which_t = ii ; }
       
-           h_tt_xB_Coh[which_Q2]         ->Fill(t, Xbj);
-           h_Q2_xB_Coh[which_Q2]         ->Fill(Xbj, Q2);
-           h_Q2_tt_Coh[which_Q2]         ->Fill( Q2,t);
+           h_tt_xB_Coh[which_Q2]  ->Fill(t, Xbj);
+           h_Q2_xB_Coh[which_Q2]  ->Fill(Xbj, Q2);
+           h_Q2_tt_Coh[which_Q2]  ->Fill( Q2,t);
+           hh_xB[which_Q2]        ->Fill(Xbj);
+           hh_Q2[which_Q2]        ->Fill(Q2);
+
 
            if (which_xB > -1 && which_t > -1 ) {
                 if (helicity == 1 )      h_dvcs_N_p[which_Q2][which_xB][which_t]->Fill(phih,1.0); 
                 else if (helicity == -1) h_dvcs_N_m[which_Q2][which_xB][which_t]->Fill(phih,1.0);
-
-                hh_xB[which_xB]        ->Fill(Xbj);
-                hh_Q2[which_xB]        ->Fill(Q2);
 
                 h_t_Q2_Coh[which_Q2][which_xB][which_t]->Fill(Q2);
                 h_t_xB_Coh[which_Q2][which_xB][which_t]->Fill(Xbj);
