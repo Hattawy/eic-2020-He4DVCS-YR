@@ -194,6 +194,7 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
            h_Q2_tt_Coh[ii]   ->GetYaxis()->CenterTitle(true);
            h_Q2_tt_Coh[ii]   ->GetYaxis()->SetTitleSize(0.07);
            h_Q2_tt_Coh[ii]   ->SetYTitle("-t [GeV^{2}]");
+          c66->SetLogy();
           c66->SetLogx();
           c66->Print(Form("figs/png/coh_Q2_tt%d.png",ii));
           c66->Print(Form("figs/pdf/coh_Q2_tt%d.pdf",ii));
