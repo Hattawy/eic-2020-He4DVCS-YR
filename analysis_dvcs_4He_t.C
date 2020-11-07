@@ -2,6 +2,7 @@
 #include "analysis_dvcs_4He_t.h"
 #include <iostream>
 #include <fstream>
+#include <TH1.h>
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -33,10 +34,11 @@
 using namespace std;
 
 int Find_Run_Number(const char*);
-void Find_CFF( double xB, double t, double &Im, double &Re);
+void Find_CFF( double xB, double t, double &Im, double &Re, int n_xB);
 void Calculate_CFF(double Q2, double xB, double t, double &A0, 
                    double &A1, double &A2, double &A3, 
                    double &c0_BH, double &c1_BH, double &c2_BH);
+void Calculate_ALU(double Q2, double xB, double t, double phi , double Im, double Re, double &ALU);
 
 void analysis_dvcs_4He_t::Loop() 
 {
@@ -82,20 +84,20 @@ void analysis_dvcs_4He_t::Loop()
       TH2D *h_Q2_tt_Coh[n_con];
       TH2D *h_tt_xB_Coh[n_con];
 
-      TH1D *hh_xB[n_con];
-      TH1D *hh_Q2[n_con];
+      TH1D *hh_xB[n_xB];
+      TH1D *hh_Q2[n_xB];
 
       for(int i=0; i<n_con; i++)
       {
          h_Q2_tt_Coh[i]  = new TH2D(Form("h_Q2_tt_Coh[%d]",i),"",500, 3.5, 32, 500, 0.006, 1);
          h_Q2_xB_Coh[i]  = new TH2D(Form("h_Q2_xB_Coh[%d]",i),"",500, 0.001, 0.11, 500, 3.5, 32);
          h_tt_xB_Coh[i]  = new TH2D(Form("h_tt_xB_Coh[%d]",i),"",500, 0.006, 1, 500, 0.0017, 0.11);
-         hh_xB[i] = new TH1D(Form("hh_xB[%d]",i),"", 300, 0, 0.11);
-         hh_Q2[i] = new TH1D(Form("hh_Q2[%d]",i),"", 300, 3.5, 32.0);
-
         for(int j=0; j<n_xB; j++)
          {
-           for(int k=0; k<n_t; k++)
+           hh_xB[j] = new TH1D(Form("hh_xB[%d]",j),"", 300, 0, 0.11);
+           hh_Q2[j] = new TH1D(Form("hh_Q2[%d]",j),"", 300, 3.5, 32.0);
+
+          for(int k=0; k<n_t; k++)
             {
             
                h_dvcs_N_p[i][j][k] = new TH1F(Form("h_dvcs_N_p[%d][%d][%d]",i,j,k)," ", 12,0,360);
@@ -155,9 +157,6 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
            h_tt_xB_Coh[which_Q2]  ->Fill(t, Xbj);
            h_Q2_xB_Coh[which_Q2]  ->Fill(Xbj, Q2);
            h_Q2_tt_Coh[which_Q2]  ->Fill( Q2,t);
-           hh_xB[which_Q2]        ->Fill(Xbj);
-           hh_Q2[which_Q2]        ->Fill(Q2);
-
 
            if (which_xB > -1 && which_t > -1 ) {
                 if (helicity == 1 )      h_dvcs_N_p[which_Q2][which_xB][which_t]->Fill(phih,1.0); 
@@ -166,7 +165,11 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
                 h_t_Q2_Coh[which_Q2][which_xB][which_t]->Fill(Q2);
                 h_t_xB_Coh[which_Q2][which_xB][which_t]->Fill(Xbj);
                 h_t_t_Coh[which_Q2][which_xB][which_t]->Fill(t);
-              }
+  
+                hh_xB[which_xB]        ->Fill(Xbj);
+                hh_Q2[which_xB]        ->Fill(Q2);
+
+             }
 
    }
 
@@ -381,7 +384,22 @@ myfile.close();
          
          TH1* hasy=(TH1*)hdif->Clone("hasy");
               hasy->Divide(hsum);
-              //hasy->SetTitle("Coherent A_{LU}");
+              
+              cout<<"n bins in phi = "<< hasy->GetNbinsX()<<endl;
+              for(int yy=1; yy<hasy->GetNbinsX()+1; yy++){
+                  double phi_hh = hasy->GetBinCenter(yy);
+                  double ALU_phi = -0.1;
+                  double Im ;
+                  double Re;
+                  Find_CFF( mean_x[ii][jj][kk], mean_t[ii][jj][kk], Im, Re, jj);
+                  Calculate_ALU(mean_Q2[ii][jj][kk], mean_x[ii][jj][kk], -1.0*mean_t[ii][jj][kk], phi_hh, Im, Re, ALU_phi); 
+
+                  hasy->SetBinContent(yy, ALU_phi);
+                  //cout<<hasy->GetBinCenter(yy)<<"    "<< hasy->GetBinContent(yy)<<endl;
+              }
+
+
+
               hasy->GetYaxis()->SetTitle("A_{LU}");
               hasy->GetYaxis()->SetTitleSize(0.07);
               hasy->GetYaxis()->CenterTitle(true);
@@ -403,16 +421,17 @@ myfile.close();
           TLatex *l3= new TLatex(10.0,-0.2,Form("%.4f< -t <%.4f",t_lims[kk], t_lims[kk+1]));
                   l3->Draw("same");
 
-          TF1 *myfit;
-          if(kk<7) myfit = new TF1("myfit","[0]*sin(x*3.1416/180.0)/(1 + [1]*cos(x*3.1416/180.0))",0.0,360.0);
-          else if(kk==7) myfit = new TF1("myfit","[0]*sin(x*3.1416/180.0)",0.0,360.0);
-          myfit->SetLineColor(kRed);
-          myfit->SetLineWidth(2);
-/*
+          // TF1 *myfit;
+          // if(kk<7) myfit = new TF1("myfit","[0]*sin(x*3.1416/180.0)/(1 + [1]*cos(x*3.1416/180.0))",0.0,360.0);
+          // else if(kk==7) myfit = new TF1("myfit","[0]*sin(x*3.1416/180.0)",0.0,360.0);
+          // myfit->SetLineColor(kRed);
+          // myfit->SetLineWidth(2);
+
           double  A0, A1, A2, A3, c0_BH, c1_BH, c2_BH; 
           Calculate_CFF(mean_Q2[ii][jj][kk], mean_x[ii][jj][kk], -1.0*mean_t[ii][jj][kk], 
                         A0, A1, A2, A3, c0_BH, c1_BH, c2_BH);
 
+          
           TF1 *ffit;
           TFitResultPtr r;
           ffit = new TF1("ffit",  Form("%0.7f*[0]*sin(x*3.14/180.0) / (%0.7f+ %0.7f*cos(x*3.14/180.0) + %0.7f*cos(2*x*3.14/180.0) + %0.7f*([0]*[0] + [1]*[1]) + %0.7f*[1] + %0.7f*[1]*cos(x*3.14/180.0))",  
@@ -421,14 +440,13 @@ myfile.close();
            ffit->SetParName(0,"Im(H_{A})");
            ffit->SetParName(1,"Re(H_{A})");
 
-*/
 
           // fit with a sin and cosin function ------------------------------------
-        hasy->Fit("myfit");
-        /*
+       // hasy->Fit("myfit");
+     
         double IM_CFF; ;
         double RE_CFF;;
-        Find_CFF(mean_x[ii][jj][kk], abs(mean_t[ii][jj][kk]), IM_CFF, RE_CFF);
+        Find_CFF(mean_x[ii][jj][kk], abs(mean_t[ii][jj][kk]), IM_CFF, RE_CFF, jj);
           
         alu_t_x[ii][jj][kk] = 0.1 *(2-jj)-0.3;
         Im_t_x[ii][jj][kk] = IM_CFF;
@@ -438,12 +456,12 @@ myfile.close();
         // alu_t_x_err[ii][jj][kk] =  myfit->GetParError(0);
         //Im_t_x_err[ii][jj][kk]  = (myfit->GetParError(0)/myfit->GetParameter(0))* abs(IM_CFF);
         //Re_t_x_err[ii][jj][kk]  =  (myfit->GetParError(1)/myfit->GetParameter(1)) *abs(Re_CFF);
-
+        
 
           // fit with the full form of the CFF
 
-          ffit->SetParameter(0,27.0);
-          ffit->SetParameter(1,-4.0);
+          //ffit->SetParameter(0,27.0);
+          //ffit->SetParameter(1,-4.0);
           hasy->Fit("ffit");
           r = hasy->Fit(ffit,"S");
           double x[1] = { 90.0};  double err[1];
@@ -455,34 +473,7 @@ myfile.close();
           Im_t_x_err[ii][jj][kk]  = ffit->GetParError(0); 
           Re_t_x_err[ii][jj][kk]  = ffit->GetParError(1);          
 
-          // print a high and a low statistics Alu bins ------------------------------
-          if( jj==1 && kk==1 ) 
-          {
-             TCanvas *c66 = new TCanvas("c6","",650,550 );
-                      c66->cd();
-
-             hasy->Draw();
-             //myfit->Draw("same");
-             l2->Draw("same");
-             l3->Draw("same");
-             c66->Print("figs/png/BSA_Coherent_Phi_high_stat.png");
-             c66->Print("figs/pdf/BSA_Coherent_Phi_high_stat.pdf");
           }
-
-          if( jj==1 && kk==5 ) 
-          {
-             TCanvas *c66 = new TCanvas("c6","",650,550 );
-                      c66->cd();
-
-             hasy->Draw();
-             //myfit->Draw("same");
-             l2->Draw("same");
-             l3->Draw("same");
-             c66->Print("figs/png/BSA_Coherent_Phi_low_stat.png");
-             c66->Print("figs/pdf/BSA_Coherent_Phi_low_stat.pdf");
-          }
-*/
-       }
     }
    }
 
@@ -495,63 +486,25 @@ myfile.close();
 
   for(int ii=0; ii<n_xB; ii++){
 
-    cout<<hh_xB[ii]   ->GetMean()<<endl;
-    cout<<hh_Q2[ii]   ->GetMean()<<endl;
+    cout<<ii<<"    "<<hh_xB[ii]   ->GetMean()<<endl;
     M_XB[ii]= (hh_xB[ii]->GetMean());
     M_Q2[ii]= (hh_Q2[ii]->GetMean());
    }
 
 //    plot_ALU_projections(mean_t, mean_t_err, alu_t_x, alu_t_x_err);
 //    plot_CFF_projections(mean_t, mean_t_err, Im_t_x_err, Re_t_x_err);
-//    FunProfile(mean_t, mean_t_err, M_XB, M_Q2, Im_t_x, Im_t_x_err);
+    FunProfile(mean_t, mean_t_err, M_XB, M_Q2, Im_t_x, Im_t_x_err);
 
 }
 
 
 
 
-void Find_CFF( double xB, double t, double &Im, double &Re){
-   
-        if( 0.10< xB && xB<0.18 ){
-             Im  = (60.77 - pow(5.08 *t, 6)) * exp( -13.2*t );
+void Find_CFF( double xB, double t, double &Im, double &Re, int n_xB){
+             Im  = (1 + 0.1/(1+n_xB))*(50.77 - pow(5.08 *t, 6)) * exp( -13.2*t );
              Re  = (-8.62 + 15.86*t - pow( -3.59*t, 3)) * exp( -7.27*t);
-        }
-       else if( 0.18< xB && xB<0.222 ){
-                Im  = (39.0 - pow( 5.45*t, 5)) * exp( -12.83*t );
-                Re  = (-12.53 + 33.88*t - pow( -0.11*t, 3)) * exp( -7.4*t);
-                }
-          else if( 0.22< xB ){
-                   Im  = (26.06 - pow( 4.4*t, 6)) * exp( -12.8*t );
-                   Re  = (-18.0 + 35.18*t - pow( -4.56*t, 3)) * exp( -9.5*t);
-                   }
-
-/*
- if( 0.1< xB && xB<0.145 ){
-          Im  = (99.0 - pow(5.5*t,6)) * exp(-13.47 *t );
-          Re  = (-5.6 + 14.7*t - pow(-1.71*t,4)) * exp(-3.9 *t );
-          }
-    else if( 0.145< xB && xB<0.195 ){
-             Im  = (60.77 - pow(5.08 *t, 6)) * exp( -13.2*t );
-             Re  = (-8.62 + 15.86*t - pow( -3.59*t, 3)) * exp( -7.27*t);
-             }
-       else if( 0.195< xB && xB<0.245 ){
-                Im  = (39.0 - pow( 5.45*t, 5)) * exp( -12.83*t );
-                Re  = (-12.53 + 33.88*t - pow( -0.11*t, 3)) * exp( -7.4*t);
-                }
-          else if( 0.245< xB && xB<0.295 ){
-                   Im  = (26.06 - pow( 4.4*t, 6)) * exp( -12.8*t );
-                   Re  = (-18.0 + 35.18*t - pow( -4.56*t, 3)) * exp( -9.5*t);
-                   }
-             else if( 0.295< xB && xB<0.345 ){
-                      Im  = (17.01 - pow( 4.08*t, 6)) * exp( -12.5*t );
-                      Re  = (-23.9 + 45.1*t - pow( -5.05*t, 3)) * exp( -10.1*t);
-                      }
-                else if( 0.345< xB ){
-                         Im  = (11.1 - pow( 4.08*t, 6)) * exp( -12.1*t );
-                         Re  = (-30.2  -154.7*t - pow( 0.037*t, 3)) * exp( -16.8*t);
-                         }
- */
- }
+  
+}
 
 
 
@@ -566,37 +519,7 @@ void Calculate_CFF(double Q2, double xB, double t,
 
   double MPROT = 0.93827;
   double MALPH = 3.7274;
-  double EBEAM = 11.0;
-  /*
-  double e = 2*xA*MALPH/sqrt(Q2); // epsilon
-  double e2 = e*e;
-  double Tmin = -Q2 * (2*xA1*(1-sqrt(1+e2))+e2) / (4*xA*xA1 + e2);
- 
-  // kinematical factors
-  double J = (1-y-y*e2/2) * (1+t/Q2)  - (1-xA)*(2-y)*t/Q2;
-  double dt = (t - Tmin)/Q2;
-  double K = -1.0*dt * xA1 * (1 -y - y*y*e2/4) * (sqrt(1+e2) + ((4*xA*xA1+e2)*dt/(4*xA1)) ); //sqrt(1 - y + e2*y*y/4)* (K_hat)/(sqrt(Q2));
-  double K2 = K*K; 
-
-
-  // Helium form factor
-  double a=0.316;
-  double b=0.681;
-  double FF4He = (1-pow(a*a*Q2,6))*exp(-b*b*Q2); // 1e-15;
- 
-  // BH propagators
-  double P1_phi = -( J + 2*K*cos(phi)) / (y * (1+e2));
-  double P2_phi =  1 + t/Q2 + (1/(y*(1+e*e))) * (J + 2*K*cos(phi));
-
-
-  // BH fourier coefficients
-   c0_BH = ( (pow(2-y,2) + pow(y*(1+e2),2)) * (e2*Q2/t+4*(1-xA)+(4*xA+e2)*t/Q2)
-                  + 2*e2*(4*(1-y)*(3+2*e2)+y*y*(2-e2*e2))
-                  - 4*xA*xA*pow(2-y,2)*(2+e2)*t/Q2
-                  + 8*K2*e2*Q2/t ) * pow(FF4He,2);
-   c1_BH = -8*(2-y)* K * (2*xA+e*e*(1-Q2/t)) * pow(FF4He,2);
-   c2_BH = 8*K2*e2*Q2*pow(FF4He,2)/t;
-   */
+  double EBEAM = 18.0;
 
   double xA = xB*MPROT/MALPH;
   double xA1= 1 - xA;
@@ -612,7 +535,7 @@ void Calculate_CFF(double Q2, double xB, double t,
   double K2 = -1.0*dt * xA1 * (1 -y - y*y*e2/4) * (sqrt(1+e2) + ((4*xA*xA1+e2)*dt/(4*xA1)) );
   //double K = sqrt(1 - y + e2*y*y/4)* (K_hat)/(sqrt(Q2));
   //double K2 = K*K;
-  double K = sqrt(K2);
+  double K = sqrt(-1.0*K2);
 
   // BH propagators
   double P1_phi = -1.0*(J + 2*K*cos(PI-phi)) / (y * (1+e2));
@@ -641,15 +564,14 @@ void Calculate_CFF(double Q2, double xB, double t,
   
   double C_INT_plus_plus_1 = ((-16*K*(1 - y - e2*y*y/4))/pow(1+e2 ,5/2)) * ( ( 1 + (1-xA)*((sqrt(1+e2) -1) /(2*xA)) + e2/(4*xA))* (xA*t/Q2)  - 3.0*e2/4.0) - 4.0*K*(2-2*y+y*y + e2*y*y/2) * ( (1+sqrt(1+e2) -e2)/pow(1+e2 ,5/2) ) *(1 - (1-3.0*xA)*t/Q2 + (1-sqrt(1+e2)+3*e2)/(1+sqrt(1+e2) -e2)*(xA*t/Q2)) * FF4He;  
 
-  double S_INT_plus_plus_1 = (8*K*(2-y)*y /(1+e2)) * ( 1 + ((1-xA+0.5*(sqrt(1+e2)-1))/(1+e2))*dt ) * FF4He;  
 
+  double S_INT_plus_plus_1 = (8*K*(2-y)*y /(1+e2)) * ( 1 + ((1-xA+0.5*(sqrt(1+e2)-1))/(1+e2))*dt ) * FF4He;  
 
 
    A0 = xA* pow(1+e2, 2) * S_INT_plus_plus_1/y;
    A1 = 2*xA*xA*t*((1+e2)/Q2) * (2-2*y+y*y + e2*y*y/2) * P1_phi * P2_phi * C_DVCS_0; 
    A2 = xA*pow(1+e2,2) * C_INT_plus_plus_0 /y;  
    A3 = xA* pow(1+e2,2) * C_INT_plus_plus_1/y; 
-
 
   // ALU2 =  A0* Im* sin(phi)/ (c0_BH + c1_BH*cos(phi) + c2_BH*cos(2*phi) + A1*(Re*Re + Im*Im) + A2*Re + A3*Re * cos(phi));
 
@@ -670,4 +592,72 @@ string StringRunNumber;
      iss >> RunNumber;
 return RunNumber;
 }
+
+
+void Calculate_ALU(double Q2, double xB, double t, double phi , double Im, double Re, double &ALU)
+  {
+
+  double PI = 3.1416;
+   phi = phi*PI/180.0;
+
+  double MPROT = 0.93827;
+  double MALPH = 3.7274;
+  double EBEAM = 18.0;
+
+  double xA = xB*MPROT/MALPH;
+  double xA1= 1 - xA;
+  double y = Q2/2/MALPH/xA/EBEAM;
+  double e = 2*xA*MALPH/sqrt(Q2); // epsilon
+  double e2 = e*e;
+  double T0 = -Q2 * (2*xA1*(1-sqrt(1+e2))+e2) / (4*xA*xA1 + e2);
+
+  // kinematical factors
+  double J = (1-y-y*e2/2) * (1+t/Q2) - (1-xA)*(2-y)*t/Q2;
+  double dt = (t - T0)/Q2;
+  double K_hat = sqrt(T0 - t) * sqrt(xA1*sqrt(1+e2) + (T0 - t)*(e2 + 4*xA1*xA)/(4*Q2) );
+  double K2 = -1.0*dt * xA1 * (1 -y - y*y*e2/4) * (sqrt(1+e2) + ((4*xA*xA1+e2)*dt/(4*xA1)) );
+  //double K = sqrt(1 - y + e2*y*y/4)* (K_hat)/(sqrt(Q2));
+  //double K2 = K*K;
+  double K = sqrt(-1.0*K2);
+
+  // BH propagators
+  double P1_phi = -1.0*(J + 2*K*cos(PI-phi)) / (y * (1+e2));
+  double P2_phi =  1 + t/Q2 + (1/(y*(1+e*e))) * (J + 2*K*cos(PI-phi));
+
+  
+  // Helium form factor
+  double a=0.316;
+  double b=0.681;
+  double FF4He = (1-pow(a*a*abs(t)/pow(0.197327,2),6))*exp(-b*b*abs(t)/pow(0.197327,2)); //  1e-15;
+  //double FF4He = (1-pow(a*a*Q2,6))*exp(-b*b*Q2);
+ 
+  // BH fourier coefficients
+  double c0_BH = ( (pow(2-y,2)+pow(y * (1+e2),2)) * (e2*Q2/t + 4*xA1 + (4*xA+e2)*t/Q2) 
+                   + 2*e2*(4*(1-y)*(3+2*e2) + y*y*(2-e2*e2))
+                   - 4*xA*xA*pow(2-y,2)*(2+e2)*t/Q2
+                   + 8*K2*e2*Q2/t) * pow(FF4He,2);
+  double c1_BH = -8*(2-y)* K * (2*xA + e2 - e2*Q2/t) * pow(FF4He,2);
+  double c2_BH =  8*K2*e2*Q2*pow(FF4He,2)/t;
+
+
+  // redefine the fourier hamoinic to fit for Re and Im of HA 
+  double C_DVCS_0 = 2*((2-2*y+y*y + 0.5*e2*y*y)/(1+e2)) ;
+
+  double C_INT_plus_plus_0 = ( -4*(2-y)*(1 + sqrt(1+e2))/(pow(1+e2 ,2))) * ( (pow(K_hat*(2-y) ,2))/(Q2*sqrt(1+e2)) +  (t/Q2)*(1-y-y*y*e2/4)*(2-xA)*( 1 + (2*xA*(t/Q2)*(2-xA + ((sqrt(1+e2) -1)/(2)) + ((e2/(2*xA))) ) + e2 )/((2-xA)*(1+sqrt(1+e2)))  )) * FF4He;  
+  
+  double C_INT_plus_plus_1 = ((-16*K*(1 - y - e2*y*y/4))/pow(1+e2 ,5/2)) * ( ( 1 + (1-xA)*((sqrt(1+e2) -1) /(2*xA)) + e2/(4*xA))* (xA*t/Q2)  - 3.0*e2/4.0) - 4.0*K*(2-2*y+y*y + e2*y*y/2) * ( (1+sqrt(1+e2) -e2)/pow(1+e2 ,5/2) ) *(1 - (1-3.0*xA)*t/Q2 + (1-sqrt(1+e2)+3*e2)/(1+sqrt(1+e2) -e2)*(xA*t/Q2)) * FF4He;  
+
+
+  double S_INT_plus_plus_1 = (8*K*(2-y)*y /(1+e2)) * ( 1 + ((1-xA+0.5*(sqrt(1+e2)-1))/(1+e2))*dt ) * FF4He;  
+
+
+  double A0 = xA* pow(1+e2, 2) * S_INT_plus_plus_1/y;
+  double A1 = 2*xA*xA*t*((1+e2)/Q2) * (2-2*y+y*y + e2*y*y/2) * P1_phi * P2_phi * C_DVCS_0; 
+  double A2 = xA*pow(1+e2,2) * C_INT_plus_plus_0 /y;  
+  double A3 = xA* pow(1+e2,2) * C_INT_plus_plus_1/y; 
+
+   ALU =  -20.0*A0* Im* sin(phi)/ (c0_BH + c1_BH*cos(phi) + c2_BH*cos(2*phi) + A1*(Re*Re + Im*Im) + A2*Re + A3*Re * cos(phi));
+   //cout<<">>   "<<phi<<"    "<<ALU<<endl;
+}
+
 
