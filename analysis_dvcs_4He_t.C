@@ -261,6 +261,8 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
     vector<vector<vector<double>>> Im_t_x_err ;
     vector<vector<vector<double>>> Re_t_x     ;
     vector<vector<vector<double>>> Re_t_x_err ;
+    vector<vector<vector<double>>> modle_Im ;
+    vector<vector<vector<double>>> modle_Re ;
 
     vector<vector<vector<double>>> mean_t      ;
     vector<vector<vector<double>>> mean_x      ;
@@ -275,6 +277,8 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
     Im_t_x_err .resize(n_con);
     Re_t_x     .resize(n_con); 
     Re_t_x_err .resize(n_con);
+    modle_Im   .resize(n_con);
+    modle_Re   .resize(n_con);
 
     mean_t     .resize(n_con);
     mean_x     .resize(n_con);
@@ -291,6 +295,8 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
        Im_t_x_err[ii] .resize(n_xB);
        Re_t_x[ii]     .resize(n_xB); 
        Re_t_x_err[ii].resize(n_xB);
+       modle_Im[ii]   .resize(n_xB);
+       modle_Re[ii]   .resize(n_xB);
 
        mean_t[ii]     .resize(n_xB);
        mean_x[ii]     .resize(n_xB);
@@ -307,6 +313,8 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
           Im_t_x_err[ii][jj]  .resize(n_t);
           Re_t_x[ii][jj]      .resize(n_t); 
           Re_t_x_err[ii][jj]  .resize(n_t);
+          modle_Im[ii][jj]    .resize(n_t);
+          modle_Re[ii][jj]    .resize(n_t);
 
           mean_t[ii][jj]      .resize(n_t);
           mean_x[ii][jj]      .resize(n_t);
@@ -319,10 +327,25 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
     }
 
 
+    ifstream infile;
+    infile.open("immCFF4he_immcFF_proton.dat");
+    int n_row = 126;
+    int n_col = 6;
+    double parameters[n_row][n_col]; 
+    for(int i =0; i<n_row; i++){
+      for(int j =0; j<n_col; j++){
+          infile>>parameters[i][j];
+      }}
+    infile.close();
+    
+    for(int i =0; i<n_row; i++){
+    cout<< parameters[i][0]<<"   "<<parameters[i][1]<<"   "<<parameters[i][2]<<"   "<<parameters[i][3]<<"   "<<parameters[i][4]<<"   "<<parameters[i][5]<<endl;
+    }
+
     int ncc=1;
-    ofstream myfile;
-    myfile.open ("Q2_xB_t_mean_values.txt");
-    myfile << "bin #"<<"  "<<"<Q2>"<<"   "<<"<xB>"<<"   "<<"<-t>"<<"\n";
+    ofstream outfile;
+    outfile.open ("Q2_xB_t_mean_values.txt");
+    outfile << "bin #"<<"  "<<"<Q2>"<<"   "<<"<xB>"<<"   "<<"<-t>"<<"\n";
 
     for(int ii=0; ii<1; ii++){
        for(int jj=0; jj<n_xB; jj++){
@@ -343,17 +366,17 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
 
           // h_t_t_Coh[ii][jj][kk]->Draw();
           // c66->Print(Form("figs/slices/coh_t%d_%d_%d.png",ii,jj,kk));
-
-
     
-             myfile <<ncc<<"  "<<h_t_Q2_Coh[ii][jj][kk]->GetMean()<<"   "<<h_t_xB_Coh[ii][jj][kk]->GetMean()<<"   "<<h_t_t_Coh[ii][jj][kk]->GetMean()<<"\n";
-    
+             outfile <<ncc<<"  "<<h_t_Q2_Coh[ii][jj][kk]->GetMean()<<"   "<<h_t_xB_Coh[ii][jj][kk]->GetMean()<<"   "<<h_t_t_Coh[ii][jj][kk]->GetMean()<<"\n";    
+             modle_Im[ii][jj][kk] = parameters[ncc-1][4]; 
+             modle_Re[ii][jj][kk] = parameters[ncc-1][5];
+             cout<<ncc<<"     "<<parameters[ncc-1][0]<<"    "<< modle_Im[ii][jj][kk]<<"    "<<modle_Im[ii][jj][kk]<<endl; 
              ncc++;
-
           }
        }
     }
-myfile.close();
+
+outfile.close();
 
 
    TCanvas *c3 = new TCanvas("c3","",1300,1000 );
