@@ -328,7 +328,7 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
 
 
     ifstream infile;
-    infile.open("immCFF4he_immcFF_proton.dat");
+    infile.open("imcff_recff_moh_4he.dat");
     int n_row = 126;
     int n_col = 6;
     double parameters[n_row][n_col]; 
@@ -370,7 +370,7 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
              outfile <<ncc<<"  "<<h_t_Q2_Coh[ii][jj][kk]->GetMean()<<"   "<<h_t_xB_Coh[ii][jj][kk]->GetMean()<<"   "<<h_t_t_Coh[ii][jj][kk]->GetMean()<<"\n";    
              modle_Im[ii][jj][kk] = parameters[ncc-1][4]; 
              modle_Re[ii][jj][kk] = parameters[ncc-1][5];
-             cout<<ncc<<"     "<<parameters[ncc-1][0]<<"    "<< modle_Im[ii][jj][kk]<<"    "<<modle_Im[ii][jj][kk]<<endl; 
+             cout<<ncc<<"     "<<parameters[ncc-1][0]<<"    "<< modle_Im[ii][jj][kk]<<"    "<<modle_Re[ii][jj][kk]<<endl; 
              ncc++;
           }
        }
@@ -412,12 +412,15 @@ outfile.close();
               for(int yy=1; yy<hasy->GetNbinsX()+1; yy++){
                   double phi_hh = hasy->GetBinCenter(yy);
                   double ALU_phi = -0.1;
-                  double Im ;
-                  double Re;
+                  double Im, Re;
                   Find_CFF( mean_x[ii][jj][kk], mean_t[ii][jj][kk], Im, Re, jj);
+                  //Im = modle_Im[ii][jj][kk]/4.0;
+                  //Re = modle_Re[ii][jj][kk]/4.0;
+                  //Re = 0.0;
+
                   Calculate_ALU(mean_Q2[ii][jj][kk], mean_x[ii][jj][kk], -1.0*mean_t[ii][jj][kk], phi_hh, Im, Re, ALU_phi); 
 
-                  hasy->SetBinContent(yy, ALU_phi);
+                  hasy->SetBinContent(yy, 22.0*ALU_phi);
                   //cout<<hasy->GetBinCenter(yy)<<"    "<< hasy->GetBinContent(yy)<<endl;
               }
 
@@ -679,8 +682,8 @@ void Calculate_ALU(double Q2, double xB, double t, double phi , double Im, doubl
   double A2 = xA*pow(1+e2,2) * C_INT_plus_plus_0 /y;  
   double A3 = xA* pow(1+e2,2) * C_INT_plus_plus_1/y; 
 
-   ALU =  -20.0*A0* Im* sin(phi)/ (c0_BH + c1_BH*cos(phi) + c2_BH*cos(2*phi) + A1*(Re*Re + Im*Im) + A2*Re + A3*Re * cos(phi));
-   //cout<<">>   "<<phi<<"    "<<ALU<<endl;
+   ALU =  -A0* Im* sin(phi)/ (c0_BH + c1_BH*cos(phi) + c2_BH*cos(2*phi) + A1*(Re*Re + Im*Im) + A2*Re + A3*Re * cos(phi));
+   //cout<<">>   "<<Im<<"    "<<Re<<"    "<<ALU<<endl;
 }
 
 
