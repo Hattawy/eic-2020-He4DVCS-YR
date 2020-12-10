@@ -262,10 +262,10 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
               if (helicity == 1 )      h_dvcs_N_p_1[which_Q2][which_xB][which_t_1]->Fill(phih,1.0); 
               else if (helicity == -1) h_dvcs_N_m_1[which_Q2][which_xB][which_t_1]->Fill(phih,1.0);
       
-              h_t_Q2_Coh_1[which_Q2][which_xB][which_t_0]->Fill(Q2);
-              h_t_xB_Coh_1[which_Q2][which_xB][which_t_0]->Fill(Xbj);
-              h_t_t_Coh_1[which_Q2][which_xB][which_t_0]->Fill(t);
-              h_t_y_Coh_1[which_Q2][which_xB][which_t_0]->Fill(y);
+              h_t_Q2_Coh_1[which_Q2][which_xB][which_t_1]->Fill(Q2);
+              h_t_xB_Coh_1[which_Q2][which_xB][which_t_1]->Fill(Xbj);
+              h_t_t_Coh_1[which_Q2][which_xB][which_t_1]->Fill(t);
+              h_t_y_Coh_1[which_Q2][which_xB][which_t_1]->Fill(y);
      
               hh_xB_1[which_xB]        ->Fill(Xbj);
               hh_Q2_1[which_xB]        ->Fill(Q2); 
@@ -292,7 +292,7 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
 
    }  // end the loop over the events 
 
-
+////// n__0 ///////////////////////////////////////////////////////
     TCanvas *c66 = new TCanvas("c66","",650,550 );
      for(int ii=0; ii<n_con; ii++){
       
@@ -623,8 +623,8 @@ outfile.close();
     }
    }
 
-    c3->Print("figs/png/BSA_Coherent_xB_t_phi.png");
-    c3->Print("figs/pdf/BSA_Coherent_xB_t_phi.pdf");
+    c3->Print("figs/png/BSA_Coherent_xB_t_phi_0.png");
+    c3->Print("figs/pdf/BSA_Coherent_xB_t_phi_0.pdf");
 
 
   vector<double> M_XB;   M_XB.resize(n_xB);
@@ -644,235 +644,209 @@ outfile.close();
 
 
 ////////   n_t_1 //////////////////////////////////////////////////////////////////
-    TCanvas *c66 = new TCanvas("c66","",650,550 );
+    TCanvas *c661 = new TCanvas("c661","",650,550 );
      for(int ii=0; ii<n_con; ii++){
       
-        c66->cd();
-           h_Q2_xB_Coh_0[ii]   ->Draw("colz");
-           h_Q2_xB_Coh_0[ii]   ->GetYaxis()->CenterTitle(true);
-           h_Q2_xB_Coh_0[ii]   ->SetYTitle("Q^{2} [GeV^{2}]");
-           h_Q2_xB_Coh_0[ii]   ->GetYaxis()->SetTitleSize(0.07);
-           h_Q2_xB_Coh_0[ii]   ->GetXaxis()->CenterTitle(true);
-           h_Q2_xB_Coh_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           h_Q2_xB_Coh_0[ii]   ->SetXTitle("x_{B}");
-          c66->SetLogx();
-          c66->Print("figs/png/coh_Q2_xB_0.png");
-          c66->Print("figs/pdf/coh_Q2_xB_0.pdf");
+        c661->cd();
+           h_Q2_xB_Coh_1[ii]   ->Draw("colz");
+           h_Q2_xB_Coh_1[ii]   ->GetYaxis()->CenterTitle(true);
+           h_Q2_xB_Coh_1[ii]   ->SetYTitle("Q^{2} [GeV^{2}]");
+           h_Q2_xB_Coh_1[ii]   ->GetYaxis()->SetTitleSize(0.07);
+           h_Q2_xB_Coh_1[ii]   ->GetXaxis()->CenterTitle(true);
+           h_Q2_xB_Coh_1[ii]   ->GetXaxis()->SetTitleSize(0.07);
+           h_Q2_xB_Coh_1[ii]   ->SetXTitle("x_{B}");
+          c661->SetLogx();
+          c661->Print("figs/png/coh_Q2_xB_1.png");
+          c661->Print("figs/pdf/coh_Q2_xB_1.pdf");
         
-        c66->cd();
-           h_Q2_tt_Coh_0[ii]   ->Draw("colz");
-           h_Q2_tt_Coh_0[ii]   ->GetXaxis()->CenterTitle(true);
-           h_Q2_tt_Coh_0[ii]   ->SetXTitle("Q^{2} [GeV^{2}]");
-           h_Q2_tt_Coh_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           h_Q2_tt_Coh_0[ii]   ->GetYaxis()->CenterTitle(true);
-           h_Q2_tt_Coh_0[ii]   ->GetYaxis()->SetTitleSize(0.07);
-           h_Q2_tt_Coh_0[ii]   ->SetYTitle("-t [GeV^{2}]");
-          c66->SetLogy();
-          c66->SetLogx();
-          c66->Print("figs/png/coh_Q2_tt_0.png");
-          c66->Print("figs/pdf/coh_Q2_tt_0.pdf");
+        c661->cd();
+           h_Q2_tt_Coh_1[ii]   ->Draw("colz");
+           h_Q2_tt_Coh_1[ii]   ->GetXaxis()->CenterTitle(true);
+           h_Q2_tt_Coh_1[ii]   ->SetXTitle("Q^{2} [GeV^{2}]");
+           h_Q2_tt_Coh_1[ii]   ->GetXaxis()->SetTitleSize(0.07);
+           h_Q2_tt_Coh_1[ii]   ->GetYaxis()->CenterTitle(true);
+           h_Q2_tt_Coh_1[ii]   ->GetYaxis()->SetTitleSize(0.07);
+           h_Q2_tt_Coh_1[ii]   ->SetYTitle("-t [GeV^{2}]");
+          c661->SetLogy();
+          c661->SetLogx();
+          c661->Print("figs/png/coh_Q2_tt_1.png");
+          c661->Print("figs/pdf/coh_Q2_tt_1.pdf");
 
-        c66->cd();
-           hh_xB_0[ii]   ->Draw();                        
-           hh_xB_0[ii]   ->GetXaxis()->CenterTitle(true);
-           hh_xB_0[ii]   ->SetXTitle("x_{B}");
-           hh_xB_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           hh_xB_0[ii]   ->SetLineWidth(2);
-          c66->SetLogy();
-          c66->Print("figs/png/coh_xB_0.png");
-          c66->Print("figs/pdf/coh_xB_0.pdf");
+        c661->cd();
+           hh_xB_1[ii]   ->Draw();                        
+           hh_xB_1[ii]   ->GetXaxis()->CenterTitle(true);
+           hh_xB_1[ii]   ->SetXTitle("x_{B}");
+           hh_xB_1[ii]   ->GetXaxis()->SetTitleSize(0.07);
+           hh_xB_1[ii]   ->SetLineWidth(2);
+          c661->SetLogy();
+          c661->Print("figs/png/coh_xB_1.png");
+          c661->Print("figs/pdf/coh_xB_1.pdf");
 
-        c66->cd();
-           hh_Q2_0[ii]   ->Draw();                        
-           hh_Q2_0[ii]   ->GetXaxis()->CenterTitle(true);
-           hh_Q2_0[ii]   ->SetXTitle("Q^{2} [GeV^{2}]");
-           hh_Q2_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           hh_Q2_0[ii]   ->SetLineWidth(2);
-          c66->SetLogy();
-          c66->Print("figs/png/coh_Q2_0.png");
-          c66->Print("figs/pdf/coh_Q2_0.pdf");
+        c661->cd();
+           hh_Q2_1[ii]   ->Draw();                        
+           hh_Q2_1[ii]   ->GetXaxis()->CenterTitle(true);
+           hh_Q2_1[ii]   ->SetXTitle("Q^{2} [GeV^{2}]");
+           hh_Q2_1[ii]   ->GetXaxis()->SetTitleSize(0.07);
+           hh_Q2_1[ii]   ->SetLineWidth(2);
+          c661->SetLogy();
+          c661->Print("figs/png/coh_Q2_1.png");
+          c661->Print("figs/pdf/coh_Q2_1.pdf");
 
          }
 
 
 
-    TLine *l = new TLine();
-           l->SetLineWidth(2);
-           l->SetLineColor(kBlack);
-  
-  
-    TCanvas *c6 = new TCanvas("c6","",650,550 );
+    TCanvas *c61 = new TCanvas("c61","",650,550 );
      for(int ii=0; ii<n_con; ii++){
         
-        c6->cd();
-           h_tt_xB_Coh_0[ii]   ->Draw("colz");
-           h_tt_xB_Coh_0[ii]   ->GetXaxis()->CenterTitle(true);
-           h_tt_xB_Coh_0[ii]   ->SetXTitle("-t [GeV^{2}]");
-           h_tt_xB_Coh_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           h_tt_xB_Coh_0[ii]   ->GetYaxis()->CenterTitle(true);
-           h_tt_xB_Coh_0[ii]   ->GetYaxis()->SetTitleSize(0.07);
-           h_tt_xB_Coh_0[ii]   ->SetYTitle("x_{B}");
-              c6->SetLogz();
-              c6->SetLogx();
-              c6->SetLogy();
+        c61->cd();
+           h_tt_xB_Coh_1[ii]   ->Draw("colz");
+           h_tt_xB_Coh_1[ii]   ->GetXaxis()->CenterTitle(true);
+           h_tt_xB_Coh_1[ii]   ->SetXTitle("-t [GeV^{2}]");
+           h_tt_xB_Coh_1[ii]   ->GetXaxis()->SetTitleSize(0.07);
+           h_tt_xB_Coh_1[ii]   ->GetYaxis()->CenterTitle(true);
+           h_tt_xB_Coh_1[ii]   ->GetYaxis()->SetTitleSize(0.07);
+           h_tt_xB_Coh_1[ii]   ->SetYTitle("x_{B}");
+              c61->SetLogz();
+              c61->SetLogx();
+              c61->SetLogy();
                  for(int i=0; i<n_xB+1;i++)
-                     l->DrawLine(t_lims_0[0],  xB_lims[i], t_lims_0[n_t_0], xB_lims[i]);
-                 for(int i=0; i<n_t_0+1;i++)
-                        l->DrawLine(t_lims_0[i], xB_lims[0], t_lims_0[i], xB_lims[n_xB]);
-          c6->Print("figs/png/coh_t_xB_0.png");
-          c6->Print("figs/pdf/coh_t_xB_0.pdf");
+                     l->DrawLine(t_lims_1[0],  xB_lims[i], t_lims_1[n_t_1], xB_lims[i]);
+                 for(int i=0; i<n_t_1+1;i++)
+                        l->DrawLine(t_lims_1[i], xB_lims[0], t_lims_1[i], xB_lims[n_xB]);
+          c61->Print("figs/png/coh_t_xB_1.png");
+          c61->Print("figs/pdf/coh_t_xB_1.pdf");
          }
  
 
-    vector<vector<vector<double>>> alu_t_x     ;
-    vector<vector<vector<double>>> alu_t_x_err ;
-    vector<vector<vector<double>>> Im_t_x     ;
-    vector<vector<vector<double>>> Im_t_x_err ;
-    vector<vector<vector<double>>> Re_t_x     ;
-    vector<vector<vector<double>>> Re_t_x_err ;
-    vector<vector<vector<double>>> modle_Im ;
-    vector<vector<vector<double>>> modle_Re ;
+    vector<vector<vector<double>>> alu_t_x_1     ;
+    vector<vector<vector<double>>> Im_t_x_1     ;
+    vector<vector<vector<double>>> Re_t_x_1     ;
+    vector<vector<vector<double>>> alu_t_x_1_err ;
+    vector<vector<vector<double>>> Im_t_x_1_err ;
+    vector<vector<vector<double>>> Re_t_x_1_err ;
+    vector<vector<vector<double>>> modle_Im_1 ;
+    vector<vector<vector<double>>> modle_Re_1 ;
 
-    vector<vector<vector<double>>> mean_y      ;
-    vector<vector<vector<double>>> mean_t_0      ;
-    vector<vector<vector<double>>> mean_x      ;
-    vector<vector<vector<double>>> mean_Q2     ;
-    vector<vector<vector<double>>> mean_y_err  ;
-    vector<vector<vector<double>>> mean_t_0_err  ;
-    vector<vector<vector<double>>> mean_x_err  ;
-    vector<vector<vector<double>>> mean_Q2_err ;
+    vector<vector<vector<double>>> mean_y_1      ;
+    vector<vector<vector<double>>> mean_t_1      ;
+    vector<vector<vector<double>>> mean_x_1      ;
+    vector<vector<vector<double>>> mean_Q2_1     ;
+    vector<vector<vector<double>>> mean_t_1_err  ;
 
-    alu_t_x    .resize(n_con); 
-    alu_t_x_err.resize(n_con);
-    Im_t_x     .resize(n_con); 
-    Im_t_x_err .resize(n_con);
-    Re_t_x     .resize(n_con); 
-    Re_t_x_err .resize(n_con);
-    modle_Im   .resize(n_con);
-    modle_Re   .resize(n_con);
+    alu_t_x_1    .resize(n_con); 
+    Im_t_x_1     .resize(n_con); 
+    Re_t_x_1     .resize(n_con); 
+    alu_t_x_1_err.resize(n_con);
+    Im_t_x_1_err .resize(n_con);
+    Re_t_x_1_err .resize(n_con);
+    modle_Im_1   .resize(n_con);
+    modle_Re_1   .resize(n_con);
 
-    mean_y     .resize(n_con);
-    mean_t_0     .resize(n_con);
-    mean_x     .resize(n_con);
-    mean_Q2    .resize(n_con);
-    mean_y_err .resize(n_con);
-    mean_t_0_err .resize(n_con);
-    mean_x_err .resize(n_con);
-    mean_Q2_err.resize(n_con);
+    mean_y_1     .resize(n_con);
+    mean_t_1     .resize(n_con);
+    mean_x_1     .resize(n_con);
+    mean_Q2_1    .resize(n_con);
+    mean_t_1_err .resize(n_con);
 
     for(int ii=0; ii<n_con; ii++){
 
-       alu_t_x[ii]    .resize(n_xB); 
-       alu_t_x_err[ii].resize(n_xB);
-       Im_t_x[ii]     .resize(n_xB); 
-       Im_t_x_err[ii] .resize(n_xB);
-       Re_t_x[ii]     .resize(n_xB); 
-       Re_t_x_err[ii].resize(n_xB);
-       modle_Im[ii]   .resize(n_xB);
-       modle_Re[ii]   .resize(n_xB);
+       alu_t_x_1[ii]    .resize(n_xB); 
+       Im_t_x_1[ii]     .resize(n_xB); 
+       Re_t_x_1[ii]     .resize(n_xB); 
+       alu_t_x_1_err[ii].resize(n_xB);
+       Im_t_x_1_err[ii] .resize(n_xB);
+       Re_t_x_1_err[ii].resize(n_xB);
+       modle_Im_1[ii]   .resize(n_xB);
+       modle_Re_1[ii]   .resize(n_xB);
 
-       mean_y[ii]     .resize(n_xB);
-       mean_t_0[ii]     .resize(n_xB);
-       mean_x[ii]     .resize(n_xB);
-       mean_Q2[ii]    .resize(n_xB);
-       mean_y_err[ii] .resize(n_xB);
-       mean_t_0_err[ii] .resize(n_xB);
-       mean_x_err[ii] .resize(n_xB);
-       mean_Q2_err[ii].resize(n_xB);
+       mean_y_1[ii]     .resize(n_xB);
+       mean_t_1[ii]     .resize(n_xB);
+       mean_x_1[ii]     .resize(n_xB);
+       mean_Q2_1[ii]    .resize(n_xB);
+       mean_t_1_err[ii] .resize(n_xB);
    
        for(int jj=0; jj<n_xB; jj++){
 
-          alu_t_x[ii][jj]     .resize(n_t_0); 
-          alu_t_x_err[ii][jj] .resize(n_t_0);
-          Im_t_x[ii][jj]      .resize(n_t_0); 
-          Im_t_x_err[ii][jj]  .resize(n_t_0);
-          Re_t_x[ii][jj]      .resize(n_t_0); 
-          Re_t_x_err[ii][jj]  .resize(n_t_0);
-          modle_Im[ii][jj]    .resize(n_t_0);
-          modle_Re[ii][jj]    .resize(n_t_0);
+          alu_t_x_1[ii][jj]     .resize(n_t_1); 
+          Im_t_x_1[ii][jj]      .resize(n_t_1); 
+          Re_t_x_1[ii][jj]      .resize(n_t_1); 
+          alu_t_x_1_err[ii][jj] .resize(n_t_1);
+          Im_t_x_1_err[ii][jj]  .resize(n_t_1);
+          Re_t_x_1_err[ii][jj]  .resize(n_t_1);
+          modle_Im_1[ii][jj]    .resize(n_t_1);
+          modle_Re_1[ii][jj]    .resize(n_t_1);
 
-          mean_y[ii][jj]      .resize(n_t_0);
-          mean_t_0[ii][jj]      .resize(n_t_0);
-          mean_x[ii][jj]      .resize(n_t_0);
-          mean_Q2[ii][jj]     .resize(n_t_0);
-          mean_y_err[ii][jj]  .resize(n_t_0);
-          mean_t_0_err[ii][jj]  .resize(n_t_0);
-          mean_x_err[ii][jj]  .resize(n_t_0);
-          mean_Q2_err[ii][jj] .resize(n_t_0);
+          mean_y_1[ii][jj]      .resize(n_t_1);
+          mean_t_1[ii][jj]      .resize(n_t_1);
+          mean_x_1[ii][jj]      .resize(n_t_1);
+          mean_Q2_1[ii][jj]     .resize(n_t_1);
+          mean_t_1_err[ii][jj]  .resize(n_t_1);
  
        }
     }
 
 
-    ifstream infile;
-    infile.open("imcff_recff_moh_4he.dat");
-    int n_row = 126;
-    int n_col = 6;
-    double parameters[n_row][n_col]; 
-    for(int i =0; i<n_row; i++){
-      for(int j =0; j<n_col; j++){
-          infile>>parameters[i][j];
+    ifstream infile_1;
+    infile_1.open("imcff_recff_moh_4he_1.dat");
+    int n_row_1 = 72;
+    int n_col_1 = 6;
+    double parameters_1[n_row_1][n_col_1]; 
+    for(int i =0; i<n_row_1; i++){
+      for(int j =0; j<n_col_1; j++){
+          infile_1>>parameters_1[i][j];
       }}
-    infile.close();
+    infile_1.close();
     
-    for(int i =0; i<n_row; i++){
-    cout<< parameters[i][0]<<"   "<<parameters[i][1]<<"   "<<parameters[i][2]<<"   "<<parameters[i][3]<<"   "<<parameters[i][4]<<"   "<<parameters[i][5]<<endl;
+    for(int i =0; i<n_row_1; i++){
+    cout<< parameters_1[i][0]<<"   "<<parameters_1[i][1]<<"   "<<parameters_1[i][2]<<"   "<<parameters_1[i][3]<<"   "<<parameters_1[i][4]<<"   "<<parameters_1[i][5]<<endl;
     }
 
-    int ncc=1;
-    ofstream outfile;
-    outfile.open ("Q2_xB_t_mean_values.txt");
-    outfile << "bin #"<<"  "<<"<Q2>"<<"   "<<"<xB>"<<"   "<<"<-t>"<<"\n";
-
+    int ncc_1=1;
     for(int ii=0; ii<1; ii++){
        for(int jj=0; jj<n_xB; jj++){
-          for(int kk=0; kk<n_t_0; kk++){
+          for(int kk=0; kk<n_t_1; kk++){
              c66->cd();          
-             mean_Q2[ii][jj][kk] = h_t_Q2_Coh_0[ii][jj][kk]->GetMean();
-             mean_x[ii][jj][kk]  = h_t_xB_Coh_0[ii][jj][kk]->GetMean();
-             mean_t_0[ii][jj][kk]  = h_t_t_Coh_0[ii][jj][kk]->GetMean();
-             mean_y[ii][jj][kk]  = h_t_y_Coh_0[ii][jj][kk]->GetMean();
+             mean_Q2_1[ii][jj][kk] = h_t_Q2_Coh_1[ii][jj][kk]->GetMean();
+             mean_x_1[ii][jj][kk]  = h_t_xB_Coh_1[ii][jj][kk]->GetMean();
+             mean_t_1[ii][jj][kk]  = h_t_t_Coh_1[ii][jj][kk]->GetMean();
+             mean_y_1[ii][jj][kk]  = h_t_y_Coh_1[ii][jj][kk]->GetMean();
 
-             mean_Q2_err[ii][jj][kk] = 0.0;
-             mean_x_err[ii][jj][kk] = 0.0;
-             mean_t_0_err[ii][jj][kk] = 0.0;
-             mean_y_err[ii][jj][kk] = 0.0;
+             mean_t_1_err[ii][jj][kk] = 0.0;
     
-             outfile <<ncc<<"  "<<h_t_Q2_Coh_0[ii][jj][kk]->GetMean()<<"   "<<h_t_xB_Coh_0[ii][jj][kk]->GetMean()<<"   "<<h_t_t_Coh_0[ii][jj][kk]->GetMean()<<"\n";    
-             modle_Im[ii][jj][kk] = parameters[ncc-1][4]; 
-             modle_Re[ii][jj][kk] = parameters[ncc-1][5];
-             ncc++;
+             modle_Im_1[ii][jj][kk] = parameters_1[ncc_1-1][4]; 
+             modle_Re_1[ii][jj][kk] = parameters_1[ncc_1-1][5];
+             ncc_1++;
           }
        }
     }
 
-outfile.close();
 
 
-   TCanvas *c3 = new TCanvas("c3","",1300,1000 );
-            c3->Divide(n_t_0,n_xB,-0.00005,-0.00005); 
-            c3->SetGrid();
+   TCanvas *c31 = new TCanvas("c31","",1300,1000 );
+            c31->Divide(n_t_1,n_xB,-0.00005,-0.00005); 
+            c31->SetGrid();
 
    // as a function of -t in xB bins
-   int counter =1;
+   int counter_1 =1;
    for(int ii=0; ii<1; ii++){
     for(int jj=n_xB-1; jj>=0; jj--){
     //for(int jj=0; jj<n_xB; jj++){
-       for(int kk=0; kk<n_t_0; kk++){
+       for(int kk=0; kk<n_t_1; kk++){
             
-          cout<< modle_Im[ii][jj][kk]<<"    "<<modle_Re[ii][jj][kk]<<endl; 
+          cout<< modle_Im_1[ii][jj][kk]<<"    "<<modle_Re_1[ii][jj][kk]<<endl; 
             
-          c3->SetGrid();
-          c3->cd(counter);
-          counter++;
+          c31->SetGrid();
+          c31->cd(counter_1);
+          counter_1++;
          
-          h_dvcs_N_p_0[ii][jj][kk]->Sumw2(); 
-          h_dvcs_N_m_0[ii][jj][kk]->Sumw2();
+          h_dvcs_N_p_1[ii][jj][kk]->Sumw2(); 
+          h_dvcs_N_m_1[ii][jj][kk]->Sumw2();
          
-          TH1* hsum=(TH1*)h_dvcs_N_p_0[ii][jj][kk]->Clone("hsum");
-          TH1* hdif=(TH1*)h_dvcs_N_p_0[ii][jj][kk]->Clone("hdif");
-          hsum->Add(h_dvcs_N_m_0[ii][jj][kk]);
-          hdif->Add(h_dvcs_N_m_0[ii][jj][kk],-1);
+          TH1* hsum=(TH1*)h_dvcs_N_p_1[ii][jj][kk]->Clone("hsum");
+          TH1* hdif=(TH1*)h_dvcs_N_p_1[ii][jj][kk]->Clone("hdif");
+          hsum->Add(h_dvcs_N_m_1[ii][jj][kk]);
+          hdif->Add(h_dvcs_N_m_1[ii][jj][kk],-1);
          
           TH1* hasy=(TH1*)hdif->Clone("hasy");
                hasy->Divide(hsum);
@@ -883,11 +857,11 @@ outfile.close();
                   double ALU_phi = -0.1;
                   double Im, Re;
                   //Find_CFF( mean_x[ii][jj][kk], mean_t[ii][jj][kk], Im, Re, jj);
-                  Im = modle_Im[ii][jj][kk];
-                  Re = modle_Re[ii][jj][kk];
+                  Im = modle_Im_1[ii][jj][kk];
+                  Re = modle_Re_1[ii][jj][kk];
                   //Re = 0.0;
 
-                  Calculate_ALU(mean_Q2[ii][jj][kk], mean_x[ii][jj][kk], -1.0*mean_t_0[ii][jj][kk], mean_y[ii][jj][kk],  phi_hh, Im, Re, ALU_phi); 
+                  Calculate_ALU(mean_Q2_1[ii][jj][kk], mean_x_1[ii][jj][kk], -1.0*mean_t_1[ii][jj][kk], mean_y_1[ii][jj][kk],  phi_hh, Im, Re, ALU_phi); 
 
                   hasy->SetBinContent(mm, ALU_phi);
                   cout<<hasy->GetBinCenter(mm)<<"    "<< hasy->GetBinContent(mm)<<endl;
@@ -913,14 +887,8 @@ outfile.close();
 
           TLatex *l2= new TLatex(10.0,-0.1,Form("%.4f< x_{B} <%.4f",xB_lims[jj], xB_lims[jj+1]));
                   l2->Draw("same");
-          TLatex *l3= new TLatex(10.0,-0.2,Form("%.4f< -t <%.4f",t_lims_0[kk], t_lims_0[kk+1]));
+          TLatex *l3= new TLatex(10.0,-0.2,Form("%.4f< -t <%.4f",t_lims_1[kk], t_lims_1[kk+1]));
                   l3->Draw("same");
-
-          // TF1 *myfit;
-          // if(kk<7) myfit = new TF1("myfit","[0]*sin(x*3.1416/180.0)/(1 + [1]*cos(x*3.1416/180.0))",0.0,360.0);
-          // else if(kk==7) myfit = new TF1("myfit","[0]*sin(x*3.1416/180.0)",0.0,360.0);
-          // myfit->SetLineColor(kRed);
-          // myfit->SetLineWidth(2);
 
           double  A0, A1, A2, A3, c0_BH, c1_BH, c2_BH; 
           Calculate_CFF(mean_Q2[ii][jj][kk], mean_x[ii][jj][kk], -1.0*mean_t_0[ii][jj][kk], mean_y[ii][jj][kk], 
@@ -937,15 +905,14 @@ outfile.close();
 
 
           // fit with a sin and cosin function ------------------------------------
-       // hasy->Fit("myfit");
      
         double IM_CFF; ;
         double RE_CFF;;
         Find_CFF(mean_x[ii][jj][kk], abs(mean_t_0[ii][jj][kk]), IM_CFF, RE_CFF, jj);
           
-        alu_t_x[ii][jj][kk] = 0.1 *(2-jj)-0.3;
-        Im_t_x[ii][jj][kk] = 0.013*modle_Im[ii][jj][kk];
-        Re_t_x[ii][jj][kk] = modle_Re[ii][jj][kk];
+        alu_t_x_1[ii][jj][kk] = 0.1 *(2-jj)-0.3;
+        Im_t_x_1[ii][jj][kk] = 0.013*modle_Im_1[ii][jj][kk];
+        Re_t_x_1[ii][jj][kk] = modle_Re_1[ii][jj][kk];
         //Im_t_x[ii][jj][kk] = IM_CFF;
         //Re_t_x[ii][jj][kk] = RE_CFF;
 
@@ -966,116 +933,108 @@ outfile.close();
           double ALU_fit     = ffit->Eval(x[0]);
           double ALU_fit_err = err[0];
 
-          alu_t_x_err[ii][jj][kk] =  ALU_fit_err;
-          Im_t_x_err[ii][jj][kk]  = ffit->GetParError(0); 
-          Re_t_x_err[ii][jj][kk]  = ffit->GetParError(1);          
+          alu_t_x_1_err[ii][jj][kk] =  ALU_fit_err;
+          Im_t_x_1_err[ii][jj][kk]  = ffit->GetParError(0); 
+          Re_t_x_1_err[ii][jj][kk]  = ffit->GetParError(1);          
 
           }
     }
    }
 
-    c3->Print("figs/png/BSA_Coherent_xB_t_phi.png");
-    c3->Print("figs/pdf/BSA_Coherent_xB_t_phi.pdf");
+    c31->Print("figs/png/BSA_Coherent_xB_t_phi_1.png");
+    c31->Print("figs/pdf/BSA_Coherent_xB_t_phi_1.pdf");
 
 
-  vector<double> M_XB;   M_XB.resize(n_xB);
-  vector<double> M_Q2;   M_Q2.resize(n_xB);
+  vector<double> M_XB_1;   M_XB_1.resize(n_xB);
+  vector<double> M_Q2_1;   M_Q2_1.resize(n_xB);
 
   for(int ii=0; ii<n_xB; ii++){
 
-    M_XB[ii]= (hh_xB_0[ii]->GetMean());
-    M_Q2[ii]= (hh_Q2_0[ii]->GetMean());
+    M_XB_1[ii]= (hh_xB_1[ii]->GetMean());
+    M_Q2_1[ii]= (hh_Q2_1[ii]->GetMean());
    }
-
-//    plot_ALU_projections(mean_t_0, mean_t_0_err, alu_t_x, alu_t_x_err);
-//    plot_CFF_projections(mean_t_0, mean_t_0_err, Im_t_x_err, Re_t_x_err);
-    FunProfile_0(mean_t_0, mean_t_0_err, M_XB, M_Q2, Im_t_x, Im_t_x_err);
-
+/*
+    FunProfile_1(mean_t_1, mean_t_1_err, M_XB_1, M_Q2_1, Im_t_x_1, Im_t_x_1_err);
+*/
 
 
 
 ///////////////   n_t_2  ///////////////////////////////////
 
-    TCanvas *c66 = new TCanvas("c66","",650,550 );
+    TCanvas *c662 = new TCanvas("c662","",650,550 );
      for(int ii=0; ii<n_con; ii++){
       
-        c66->cd();
-           h_Q2_xB_Coh_0[ii]   ->Draw("colz");
-           h_Q2_xB_Coh_0[ii]   ->GetYaxis()->CenterTitle(true);
-           h_Q2_xB_Coh_0[ii]   ->SetYTitle("Q^{2} [GeV^{2}]");
-           h_Q2_xB_Coh_0[ii]   ->GetYaxis()->SetTitleSize(0.07);
-           h_Q2_xB_Coh_0[ii]   ->GetXaxis()->CenterTitle(true);
-           h_Q2_xB_Coh_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           h_Q2_xB_Coh_0[ii]   ->SetXTitle("x_{B}");
-          c66->SetLogx();
-          c66->Print("figs/png/coh_Q2_xB_0.png");
-          c66->Print("figs/pdf/coh_Q2_xB_0.pdf");
+        c662->cd();
+           h_Q2_xB_Coh_2[ii]   ->Draw("colz");
+           h_Q2_xB_Coh_2[ii]   ->GetYaxis()->CenterTitle(true);
+           h_Q2_xB_Coh_2[ii]   ->SetYTitle("Q^{2} [GeV^{2}]");
+           h_Q2_xB_Coh_2[ii]   ->GetYaxis()->SetTitleSize(0.07);
+           h_Q2_xB_Coh_2[ii]   ->GetXaxis()->CenterTitle(true);
+           h_Q2_xB_Coh_2[ii]   ->GetXaxis()->SetTitleSize(0.07);
+           h_Q2_xB_Coh_2[ii]   ->SetXTitle("x_{B}");
+          c662->SetLogx();
+          c662->Print("figs/png/coh_Q2_xB_2.png");
+          c662->Print("figs/pdf/coh_Q2_xB_2.pdf");
         
-        c66->cd();
-           h_Q2_tt_Coh_0[ii]   ->Draw("colz");
-           h_Q2_tt_Coh_0[ii]   ->GetXaxis()->CenterTitle(true);
-           h_Q2_tt_Coh_0[ii]   ->SetXTitle("Q^{2} [GeV^{2}]");
-           h_Q2_tt_Coh_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           h_Q2_tt_Coh_0[ii]   ->GetYaxis()->CenterTitle(true);
-           h_Q2_tt_Coh_0[ii]   ->GetYaxis()->SetTitleSize(0.07);
-           h_Q2_tt_Coh_0[ii]   ->SetYTitle("-t [GeV^{2}]");
-          c66->SetLogy();
-          c66->SetLogx();
-          c66->Print("figs/png/coh_Q2_tt_0.png");
-          c66->Print("figs/pdf/coh_Q2_tt_0.pdf");
+        c662->cd();
+           h_Q2_tt_Coh_2[ii]   ->Draw("colz");
+           h_Q2_tt_Coh_2[ii]   ->GetXaxis()->CenterTitle(true);
+           h_Q2_tt_Coh_2[ii]   ->SetXTitle("Q^{2} [GeV^{2}]");
+           h_Q2_tt_Coh_2[ii]   ->GetXaxis()->SetTitleSize(0.07);
+           h_Q2_tt_Coh_2[ii]   ->GetYaxis()->CenterTitle(true);
+           h_Q2_tt_Coh_2[ii]   ->GetYaxis()->SetTitleSize(0.07);
+           h_Q2_tt_Coh_2[ii]   ->SetYTitle("-t [GeV^{2}]");
+          c662->SetLogy();
+          c662->SetLogx();
+          c662->Print("figs/png/coh_Q2_tt_2.png");
+          c662->Print("figs/pdf/coh_Q2_tt_2.pdf");
 
-        c66->cd();
-           hh_xB_0[ii]   ->Draw();                        
-           hh_xB_0[ii]   ->GetXaxis()->CenterTitle(true);
-           hh_xB_0[ii]   ->SetXTitle("x_{B}");
-           hh_xB_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           hh_xB_0[ii]   ->SetLineWidth(2);
-          c66->SetLogy();
-          c66->Print("figs/png/coh_xB_0.png");
-          c66->Print("figs/pdf/coh_xB_0.pdf");
+        c662->cd();
+           hh_xB_2[ii]   ->Draw();                        
+           hh_xB_2[ii]   ->GetXaxis()->CenterTitle(true);
+           hh_xB_2[ii]   ->SetXTitle("x_{B}");
+           hh_xB_2[ii]   ->GetXaxis()->SetTitleSize(0.07);
+           hh_xB_2[ii]   ->SetLineWidth(2);
+          c662->SetLogy();
+          c662->Print("figs/png/coh_xB_2.png");
+          c662->Print("figs/pdf/coh_xB_2.pdf");
 
-        c66->cd();
-           hh_Q2_0[ii]   ->Draw();                        
-           hh_Q2_0[ii]   ->GetXaxis()->CenterTitle(true);
-           hh_Q2_0[ii]   ->SetXTitle("Q^{2} [GeV^{2}]");
-           hh_Q2_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           hh_Q2_0[ii]   ->SetLineWidth(2);
-          c66->SetLogy();
-          c66->Print("figs/png/coh_Q2_0.png");
-          c66->Print("figs/pdf/coh_Q2_0.pdf");
+        c662->cd();
+           hh_Q2_2[ii]   ->Draw();                        
+           hh_Q2_2[ii]   ->GetXaxis()->CenterTitle(true);
+           hh_Q2_2[ii]   ->SetXTitle("Q^{2} [GeV^{2}]");
+           hh_Q2_2[ii]   ->GetXaxis()->SetTitleSize(0.07);
+           hh_Q2_2[ii]   ->SetLineWidth(2);
+          c662->SetLogy();
+          c662->Print("figs/png/coh_Q2_2.png");
+          c662->Print("figs/pdf/coh_Q2_2.pdf");
 
          }
 
 
-
-    TLine *l = new TLine();
-           l->SetLineWidth(2);
-           l->SetLineColor(kBlack);
-  
-  
-    TCanvas *c6 = new TCanvas("c6","",650,550 );
+    TCanvas *c62 = new TCanvas("c62","",650,550 );
      for(int ii=0; ii<n_con; ii++){
         
-        c6->cd();
-           h_tt_xB_Coh_0[ii]   ->Draw("colz");
-           h_tt_xB_Coh_0[ii]   ->GetXaxis()->CenterTitle(true);
-           h_tt_xB_Coh_0[ii]   ->SetXTitle("-t [GeV^{2}]");
-           h_tt_xB_Coh_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           h_tt_xB_Coh_0[ii]   ->GetYaxis()->CenterTitle(true);
-           h_tt_xB_Coh_0[ii]   ->GetYaxis()->SetTitleSize(0.07);
-           h_tt_xB_Coh_0[ii]   ->SetYTitle("x_{B}");
-              c6->SetLogz();
-              c6->SetLogx();
-              c6->SetLogy();
+        c62->cd();
+           h_tt_xB_Coh_2[ii]   ->Draw("colz");
+           h_tt_xB_Coh_2[ii]   ->GetXaxis()->CenterTitle(true);
+           h_tt_xB_Coh_2[ii]   ->SetXTitle("-t [GeV^{2}]");
+           h_tt_xB_Coh_2[ii]   ->GetXaxis()->SetTitleSize(0.07);
+           h_tt_xB_Coh_2[ii]   ->GetYaxis()->CenterTitle(true);
+           h_tt_xB_Coh_2[ii]   ->GetYaxis()->SetTitleSize(0.07);
+           h_tt_xB_Coh_2[ii]   ->SetYTitle("x_{B}");
+              c62->SetLogz();
+              c62->SetLogx();
+              c62->SetLogy();
                  for(int i=0; i<n_xB+1;i++)
-                     l->DrawLine(t_lims_0[0],  xB_lims[i], t_lims_0[n_t_0], xB_lims[i]);
-                 for(int i=0; i<n_t_0+1;i++)
-                        l->DrawLine(t_lims_0[i], xB_lims[0], t_lims_0[i], xB_lims[n_xB]);
-          c6->Print("figs/png/coh_t_xB_0.png");
-          c6->Print("figs/pdf/coh_t_xB_0.pdf");
+                     l->DrawLine(t_lims_2[0],  xB_lims[i], t_lims_2[n_t_2], xB_lims[i]);
+                 for(int i=0; i<n_t_2+1;i++)
+                        l->DrawLine(t_lims_2[i], xB_lims[0], t_lims_2[i], xB_lims[n_xB]);
+          c62->Print("figs/png/coh_t_xB_2.png");
+          c62->Print("figs/pdf/coh_t_xB_2.pdf");
          }
  
-
+/*
     vector<vector<vector<double>>> alu_t_x     ;
     vector<vector<vector<double>>> alu_t_x_err ;
     vector<vector<vector<double>>> Im_t_x     ;
@@ -1341,9 +1300,9 @@ outfile.close();
 
 //    plot_ALU_projections(mean_t_0, mean_t_0_err, alu_t_x, alu_t_x_err);
 //    plot_CFF_projections(mean_t_0, mean_t_0_err, Im_t_x_err, Re_t_x_err);
-    FunProfile_0(mean_t_0, mean_t_0_err, M_XB, M_Q2, Im_t_x, Im_t_x_err);
+    FunProfile_2(mean_t_0, mean_t_0_err, M_XB, M_Q2, Im_t_x, Im_t_x_err);
 
-
+*/
 
 
 
