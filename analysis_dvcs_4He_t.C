@@ -540,9 +540,10 @@ outfile.close();
               if(ii==1) hasy->Draw("same");
               if(ii==2) hasy->Draw("same");
 
-          TLatex *l2= new TLatex(10.0,-0.1,Form("%.4f< x_{B} <%.4f",xB_lims[jj], xB_lims[jj+1]));
+          TLatex *l2= new TLatex(10.0,-0.25,Form("%.4f< x_{B} <%.4f",xB_lims[jj], xB_lims[jj+1]));
+                  
                   l2->Draw("same");
-          TLatex *l3= new TLatex(10.0,-0.2,Form("%.4f< -t <%.4f",t_lims_0[kk], t_lims_0[kk+1]));
+          TLatex *l3= new TLatex(10.0,-0.4,Form("%.4f< -t <%.4f",t_lims_0[kk], t_lims_0[kk+1]));
                   l3->Draw("same");
 
           // TF1 *myfit;
@@ -845,9 +846,11 @@ outfile.close();
               if(ii==1) hasy->Draw("same");
               if(ii==2) hasy->Draw("same");
 
-          TLatex *l2= new TLatex(10.0,-0.1,Form("%.4f< x_{B} <%.4f",xB_lims[jj], xB_lims[jj+1]));
+          TLatex *l2= new TLatex(10.0,-0.2,Form("%.4f< x_{B} <%.4f",xB_lims[jj], xB_lims[jj+1]));
+                  l2->SetTextSize(0.07);
                   l2->Draw("same");
-          TLatex *l3= new TLatex(10.0,-0.2,Form("%.4f< -t <%.4f",t_lims_1[kk], t_lims_1[kk+1]));
+          TLatex *l3= new TLatex(10.0,-0.4,Form("%.4f< -t <%.4f",t_lims_1[kk], t_lims_1[kk+1]));
+                  l3->SetTextSize(0.07);
                   l3->Draw("same");
 
           double  A0, A1, A2, A3, c0_BH, c1_BH, c2_BH; 
@@ -1140,9 +1143,11 @@ outfile.close();
               if(ii==1) hasy->Draw("same");
               if(ii==2) hasy->Draw("same");
 
-          TLatex *l2= new TLatex(10.0,-0.1,Form("%.4f< x_{B} <%.4f",xB_lims[jj], xB_lims[jj+1]));
+          TLatex *l2= new TLatex(10.0,-0.2,Form("%.4f< x_{B} <%.4f",xB_lims[jj], xB_lims[jj+1]));
+                  l2->SetTextSize(0.09);
                   l2->Draw("same");
-          TLatex *l3= new TLatex(10.0,-0.2,Form("%.4f< -t <%.4f",t_lims_2[kk], t_lims_2[kk+1]));
+          TLatex *l3= new TLatex(10.0,-0.4,Form("%.4f< -t <%.4f",t_lims_2[kk], t_lims_2[kk+1]));
+                  l3->SetTextSize(0.09);
                   l3->Draw("same");
 
           double  A0, A1, A2, A3, c0_BH, c1_BH, c2_BH; 
