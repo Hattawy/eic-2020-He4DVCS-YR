@@ -1034,156 +1034,134 @@ outfile.close();
           c62->Print("figs/pdf/coh_t_xB_2.pdf");
          }
  
-/*
-    vector<vector<vector<double>>> alu_t_x     ;
-    vector<vector<vector<double>>> alu_t_x_err ;
-    vector<vector<vector<double>>> Im_t_x     ;
-    vector<vector<vector<double>>> Im_t_x_err ;
-    vector<vector<vector<double>>> Re_t_x     ;
-    vector<vector<vector<double>>> Re_t_x_err ;
-    vector<vector<vector<double>>> modle_Im ;
-    vector<vector<vector<double>>> modle_Re ;
+   vector<vector<vector<double>>> alu_t_x_2     ;
+    vector<vector<vector<double>>> Im_t_x_2     ;
+    vector<vector<vector<double>>> Re_t_x_2     ;
+    vector<vector<vector<double>>> alu_t_x_2_err ;
+    vector<vector<vector<double>>> Im_t_x_2_err ;
+    vector<vector<vector<double>>> Re_t_x_2_err ;
+    vector<vector<vector<double>>> modle_Im_2 ;
+    vector<vector<vector<double>>> modle_Re_2 ;
 
-    vector<vector<vector<double>>> mean_y      ;
-    vector<vector<vector<double>>> mean_t_0      ;
-    vector<vector<vector<double>>> mean_x      ;
-    vector<vector<vector<double>>> mean_Q2     ;
-    vector<vector<vector<double>>> mean_y_err  ;
-    vector<vector<vector<double>>> mean_t_0_err  ;
-    vector<vector<vector<double>>> mean_x_err  ;
-    vector<vector<vector<double>>> mean_Q2_err ;
+    vector<vector<vector<double>>> mean_y_2      ;
+    vector<vector<vector<double>>> mean_t_2      ;
+    vector<vector<vector<double>>> mean_x_2      ;
+    vector<vector<vector<double>>> mean_Q2_2     ;
+    vector<vector<vector<double>>> mean_t_2_err  ;
 
-    alu_t_x    .resize(n_con); 
-    alu_t_x_err.resize(n_con);
-    Im_t_x     .resize(n_con); 
-    Im_t_x_err .resize(n_con);
-    Re_t_x     .resize(n_con); 
-    Re_t_x_err .resize(n_con);
-    modle_Im   .resize(n_con);
-    modle_Re   .resize(n_con);
+    alu_t_x_2    .resize(n_con); 
+    Im_t_x_2     .resize(n_con); 
+    Re_t_x_2     .resize(n_con); 
+    alu_t_x_2_err.resize(n_con);
+    Im_t_x_2_err .resize(n_con);
+    Re_t_x_2_err .resize(n_con);
+    modle_Im_2   .resize(n_con);
+    modle_Re_2   .resize(n_con);
 
-    mean_y     .resize(n_con);
-    mean_t_0     .resize(n_con);
-    mean_x     .resize(n_con);
-    mean_Q2    .resize(n_con);
-    mean_y_err .resize(n_con);
-    mean_t_0_err .resize(n_con);
-    mean_x_err .resize(n_con);
-    mean_Q2_err.resize(n_con);
+    mean_y_2     .resize(n_con);
+    mean_t_2     .resize(n_con);
+    mean_x_2     .resize(n_con);
+    mean_Q2_2    .resize(n_con);
+    mean_t_2_err .resize(n_con);
 
     for(int ii=0; ii<n_con; ii++){
 
-       alu_t_x[ii]    .resize(n_xB); 
-       alu_t_x_err[ii].resize(n_xB);
-       Im_t_x[ii]     .resize(n_xB); 
-       Im_t_x_err[ii] .resize(n_xB);
-       Re_t_x[ii]     .resize(n_xB); 
-       Re_t_x_err[ii].resize(n_xB);
-       modle_Im[ii]   .resize(n_xB);
-       modle_Re[ii]   .resize(n_xB);
+       alu_t_x_2[ii]    .resize(n_xB); 
+       Im_t_x_2[ii]     .resize(n_xB); 
+       Re_t_x_2[ii]     .resize(n_xB); 
+       alu_t_x_2_err[ii].resize(n_xB);
+       Im_t_x_2_err[ii] .resize(n_xB);
+       Re_t_x_2_err[ii].resize(n_xB);
+       modle_Im_2[ii]   .resize(n_xB);
+       modle_Re_2[ii]   .resize(n_xB);
 
-       mean_y[ii]     .resize(n_xB);
-       mean_t_0[ii]     .resize(n_xB);
-       mean_x[ii]     .resize(n_xB);
-       mean_Q2[ii]    .resize(n_xB);
-       mean_y_err[ii] .resize(n_xB);
-       mean_t_0_err[ii] .resize(n_xB);
-       mean_x_err[ii] .resize(n_xB);
-       mean_Q2_err[ii].resize(n_xB);
+       mean_y_2[ii]     .resize(n_xB);
+       mean_t_2[ii]     .resize(n_xB);
+       mean_x_2[ii]     .resize(n_xB);
+       mean_Q2_2[ii]    .resize(n_xB);
+       mean_t_2_err[ii] .resize(n_xB);
    
        for(int jj=0; jj<n_xB; jj++){
 
-          alu_t_x[ii][jj]     .resize(n_t_0); 
-          alu_t_x_err[ii][jj] .resize(n_t_0);
-          Im_t_x[ii][jj]      .resize(n_t_0); 
-          Im_t_x_err[ii][jj]  .resize(n_t_0);
-          Re_t_x[ii][jj]      .resize(n_t_0); 
-          Re_t_x_err[ii][jj]  .resize(n_t_0);
-          modle_Im[ii][jj]    .resize(n_t_0);
-          modle_Re[ii][jj]    .resize(n_t_0);
+          alu_t_x_2[ii][jj]     .resize(n_t_2); 
+          Im_t_x_2[ii][jj]      .resize(n_t_2); 
+          Re_t_x_2[ii][jj]      .resize(n_t_2); 
+          alu_t_x_2_err[ii][jj] .resize(n_t_2);
+          Im_t_x_2_err[ii][jj]  .resize(n_t_2);
+          Re_t_x_2_err[ii][jj]  .resize(n_t_2);
+          modle_Im_2[ii][jj]    .resize(n_t_2);
+          modle_Re_2[ii][jj]    .resize(n_t_2);
 
-          mean_y[ii][jj]      .resize(n_t_0);
-          mean_t_0[ii][jj]      .resize(n_t_0);
-          mean_x[ii][jj]      .resize(n_t_0);
-          mean_Q2[ii][jj]     .resize(n_t_0);
-          mean_y_err[ii][jj]  .resize(n_t_0);
-          mean_t_0_err[ii][jj]  .resize(n_t_0);
-          mean_x_err[ii][jj]  .resize(n_t_0);
-          mean_Q2_err[ii][jj] .resize(n_t_0);
+          mean_y_2[ii][jj]      .resize(n_t_2);
+          mean_t_2[ii][jj]      .resize(n_t_2);
+          mean_x_2[ii][jj]      .resize(n_t_2);
+          mean_Q2_2[ii][jj]     .resize(n_t_2);
+          mean_t_2_err[ii][jj]  .resize(n_t_2);
  
        }
     }
 
 
-    ifstream infile;
-    infile.open("imcff_recff_moh_4he.dat");
-    int n_row = 126;
-    int n_col = 6;
-    double parameters[n_row][n_col]; 
-    for(int i =0; i<n_row; i++){
-      for(int j =0; j<n_col; j++){
-          infile>>parameters[i][j];
+    ifstream infile_2;
+    infile_2.open("imcff_recff_moh_4he_2.dat");
+    int n_row_2 = 72;
+    int n_col_2 = 6;
+    double parameters_2[n_row_2][n_col_2]; 
+    for(int i =0; i<n_row_2; i++){
+      for(int j =0; j<n_col_2; j++){
+          infile_2>>parameters_2[i][j];
       }}
-    infile.close();
+    infile_2.close();
     
-    for(int i =0; i<n_row; i++){
-    cout<< parameters[i][0]<<"   "<<parameters[i][1]<<"   "<<parameters[i][2]<<"   "<<parameters[i][3]<<"   "<<parameters[i][4]<<"   "<<parameters[i][5]<<endl;
+    for(int i =0; i<n_row_2; i++){
+    cout<< parameters_2[i][0]<<"   "<<parameters_2[i][1]<<"   "<<parameters_2[i][2]<<"   "<<parameters_2[i][3]<<"   "<<parameters_2[i][4]<<"   "<<parameters_2[i][5]<<endl;
     }
 
-    int ncc=1;
-    ofstream outfile;
-    outfile.open ("Q2_xB_t_mean_values.txt");
-    outfile << "bin #"<<"  "<<"<Q2>"<<"   "<<"<xB>"<<"   "<<"<-t>"<<"\n";
-
+    int ncc_2=1;
     for(int ii=0; ii<1; ii++){
        for(int jj=0; jj<n_xB; jj++){
-          for(int kk=0; kk<n_t_0; kk++){
+          for(int kk=0; kk<n_t_2; kk++){
              c66->cd();          
-             mean_Q2[ii][jj][kk] = h_t_Q2_Coh_0[ii][jj][kk]->GetMean();
-             mean_x[ii][jj][kk]  = h_t_xB_Coh_0[ii][jj][kk]->GetMean();
-             mean_t_0[ii][jj][kk]  = h_t_t_Coh_0[ii][jj][kk]->GetMean();
-             mean_y[ii][jj][kk]  = h_t_y_Coh_0[ii][jj][kk]->GetMean();
+             mean_Q2_2[ii][jj][kk] = h_t_Q2_Coh_2[ii][jj][kk]->GetMean();
+             mean_x_2[ii][jj][kk]  = h_t_xB_Coh_2[ii][jj][kk]->GetMean();
+             mean_t_2[ii][jj][kk]  = h_t_t_Coh_2[ii][jj][kk]->GetMean();
+             mean_y_2[ii][jj][kk]  = h_t_y_Coh_2[ii][jj][kk]->GetMean();
 
-             mean_Q2_err[ii][jj][kk] = 0.0;
-             mean_x_err[ii][jj][kk] = 0.0;
-             mean_t_0_err[ii][jj][kk] = 0.0;
-             mean_y_err[ii][jj][kk] = 0.0;
+             mean_t_2_err[ii][jj][kk] = 0.0;
     
-             outfile <<ncc<<"  "<<h_t_Q2_Coh_0[ii][jj][kk]->GetMean()<<"   "<<h_t_xB_Coh_0[ii][jj][kk]->GetMean()<<"   "<<h_t_t_Coh_0[ii][jj][kk]->GetMean()<<"\n";    
-             modle_Im[ii][jj][kk] = parameters[ncc-1][4]; 
-             modle_Re[ii][jj][kk] = parameters[ncc-1][5];
-             ncc++;
+             modle_Im_2[ii][jj][kk] = parameters_2[ncc_2-1][4]; 
+             modle_Re_2[ii][jj][kk] = parameters_2[ncc_2-1][5];
+             ncc_2++;
           }
        }
     }
 
-outfile.close();
 
 
-   TCanvas *c3 = new TCanvas("c3","",1300,1000 );
-            c3->Divide(n_t_0,n_xB,-0.00005,-0.00005); 
-            c3->SetGrid();
+   TCanvas *c31 = new TCanvas("c31","",1300,1000 );
+            c31->Divide(n_t_2,n_xB,-0.00005,-0.00005); 
+            c31->SetGrid();
 
    // as a function of -t in xB bins
-   int counter =1;
+   int counter_2 =1;
    for(int ii=0; ii<1; ii++){
     for(int jj=n_xB-1; jj>=0; jj--){
     //for(int jj=0; jj<n_xB; jj++){
-       for(int kk=0; kk<n_t_0; kk++){
+       for(int kk=0; kk<n_t_2; kk++){
             
-          cout<< modle_Im[ii][jj][kk]<<"    "<<modle_Re[ii][jj][kk]<<endl; 
+          cout<< modle_Im_2[ii][jj][kk]<<"    "<<modle_Re_2[ii][jj][kk]<<endl; 
             
-          c3->SetGrid();
-          c3->cd(counter);
-          counter++;
+          c31->SetGrid();
+          c31->cd(counter_2);
+          counter_2++;
          
-          h_dvcs_N_p_0[ii][jj][kk]->Sumw2(); 
-          h_dvcs_N_m_0[ii][jj][kk]->Sumw2();
+          h_dvcs_N_p_2[ii][jj][kk]->Sumw2(); 
+          h_dvcs_N_m_2[ii][jj][kk]->Sumw2();
          
-          TH1* hsum=(TH1*)h_dvcs_N_p_0[ii][jj][kk]->Clone("hsum");
-          TH1* hdif=(TH1*)h_dvcs_N_p_0[ii][jj][kk]->Clone("hdif");
-          hsum->Add(h_dvcs_N_m_0[ii][jj][kk]);
-          hdif->Add(h_dvcs_N_m_0[ii][jj][kk],-1);
+          TH1* hsum=(TH1*)h_dvcs_N_p_2[ii][jj][kk]->Clone("hsum");
+          TH1* hdif=(TH1*)h_dvcs_N_p_2[ii][jj][kk]->Clone("hdif");
+          hsum->Add(h_dvcs_N_m_2[ii][jj][kk]);
+          hdif->Add(h_dvcs_N_m_2[ii][jj][kk],-1);
          
           TH1* hasy=(TH1*)hdif->Clone("hasy");
                hasy->Divide(hsum);
@@ -1194,11 +1172,11 @@ outfile.close();
                   double ALU_phi = -0.1;
                   double Im, Re;
                   //Find_CFF( mean_x[ii][jj][kk], mean_t[ii][jj][kk], Im, Re, jj);
-                  Im = modle_Im[ii][jj][kk];
-                  Re = modle_Re[ii][jj][kk];
+                  Im = modle_Im_2[ii][jj][kk];
+                  Re = modle_Re_2[ii][jj][kk];
                   //Re = 0.0;
 
-                  Calculate_ALU(mean_Q2[ii][jj][kk], mean_x[ii][jj][kk], -1.0*mean_t_0[ii][jj][kk], mean_y[ii][jj][kk],  phi_hh, Im, Re, ALU_phi); 
+                  Calculate_ALU(mean_Q2_2[ii][jj][kk], mean_x_2[ii][jj][kk], -1.0*mean_t_2[ii][jj][kk], mean_y_2[ii][jj][kk],  phi_hh, Im, Re, ALU_phi); 
 
                   hasy->SetBinContent(mm, ALU_phi);
                   cout<<hasy->GetBinCenter(mm)<<"    "<< hasy->GetBinContent(mm)<<endl;
@@ -1224,14 +1202,8 @@ outfile.close();
 
           TLatex *l2= new TLatex(10.0,-0.1,Form("%.4f< x_{B} <%.4f",xB_lims[jj], xB_lims[jj+1]));
                   l2->Draw("same");
-          TLatex *l3= new TLatex(10.0,-0.2,Form("%.4f< -t <%.4f",t_lims_0[kk], t_lims_0[kk+1]));
+          TLatex *l3= new TLatex(10.0,-0.2,Form("%.4f< -t <%.4f",t_lims_2[kk], t_lims_2[kk+1]));
                   l3->Draw("same");
-
-          // TF1 *myfit;
-          // if(kk<7) myfit = new TF1("myfit","[0]*sin(x*3.1416/180.0)/(1 + [1]*cos(x*3.1416/180.0))",0.0,360.0);
-          // else if(kk==7) myfit = new TF1("myfit","[0]*sin(x*3.1416/180.0)",0.0,360.0);
-          // myfit->SetLineColor(kRed);
-          // myfit->SetLineWidth(2);
 
           double  A0, A1, A2, A3, c0_BH, c1_BH, c2_BH; 
           Calculate_CFF(mean_Q2[ii][jj][kk], mean_x[ii][jj][kk], -1.0*mean_t_0[ii][jj][kk], mean_y[ii][jj][kk], 
@@ -1248,15 +1220,14 @@ outfile.close();
 
 
           // fit with a sin and cosin function ------------------------------------
-       // hasy->Fit("myfit");
      
         double IM_CFF; ;
         double RE_CFF;;
         Find_CFF(mean_x[ii][jj][kk], abs(mean_t_0[ii][jj][kk]), IM_CFF, RE_CFF, jj);
           
-        alu_t_x[ii][jj][kk] = 0.1 *(2-jj)-0.3;
-        Im_t_x[ii][jj][kk] = 0.013*modle_Im[ii][jj][kk];
-        Re_t_x[ii][jj][kk] = modle_Re[ii][jj][kk];
+        alu_t_x_2[ii][jj][kk] = 0.1 *(2-jj)-0.3;
+        Im_t_x_2[ii][jj][kk] = 0.013*modle_Im_2[ii][jj][kk];
+        Re_t_x_2[ii][jj][kk] = modle_Re_2[ii][jj][kk];
         //Im_t_x[ii][jj][kk] = IM_CFF;
         //Re_t_x[ii][jj][kk] = RE_CFF;
 
@@ -1277,32 +1248,30 @@ outfile.close();
           double ALU_fit     = ffit->Eval(x[0]);
           double ALU_fit_err = err[0];
 
-          alu_t_x_err[ii][jj][kk] =  ALU_fit_err;
-          Im_t_x_err[ii][jj][kk]  = ffit->GetParError(0); 
-          Re_t_x_err[ii][jj][kk]  = ffit->GetParError(1);          
+          alu_t_x_2_err[ii][jj][kk] =  ALU_fit_err;
+          Im_t_x_2_err[ii][jj][kk]  = ffit->GetParError(0); 
+          Re_t_x_2_err[ii][jj][kk]  = ffit->GetParError(1);          
 
           }
     }
    }
 
-    c3->Print("figs/png/BSA_Coherent_xB_t_phi.png");
-    c3->Print("figs/pdf/BSA_Coherent_xB_t_phi.pdf");
+    c31->Print("figs/png/BSA_Coherent_xB_t_phi_2.png");
+    c31->Print("figs/pdf/BSA_Coherent_xB_t_phi_2.pdf");
 
 
-  vector<double> M_XB;   M_XB.resize(n_xB);
-  vector<double> M_Q2;   M_Q2.resize(n_xB);
+  vector<double> M_XB_2;   M_XB_2.resize(n_xB);
+  vector<double> M_Q2_2;   M_Q2_2.resize(n_xB);
 
   for(int ii=0; ii<n_xB; ii++){
 
-    M_XB[ii]= (hh_xB_0[ii]->GetMean());
-    M_Q2[ii]= (hh_Q2_0[ii]->GetMean());
+    M_XB_2[ii]= (hh_xB_2[ii]->GetMean());
+    M_Q2_2[ii]= (hh_Q2_2[ii]->GetMean());
    }
-
-//    plot_ALU_projections(mean_t_0, mean_t_0_err, alu_t_x, alu_t_x_err);
-//    plot_CFF_projections(mean_t_0, mean_t_0_err, Im_t_x_err, Re_t_x_err);
-    FunProfile_2(mean_t_0, mean_t_0_err, M_XB, M_Q2, Im_t_x, Im_t_x_err);
-
+/*
+    FunProfile_2(mean_t_2, mean_t_2_err, M_XB_2, M_Q2_2, Im_t_x_2, Im_t_x_2_err);
 */
+
 
 
 
