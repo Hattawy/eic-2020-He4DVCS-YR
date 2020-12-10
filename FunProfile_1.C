@@ -7,8 +7,8 @@ void FunProfile_1(vector<vector<vector<double>>> mean_t,
 ){
 
 
-const int n_xB= 9; // number of bins in xB
-const int n_t = 8; // number of bins in -t
+const int n_xB=9; // number of bins in xB
+const int n_t = 14; // number of bins in -t
 int npt[n_xB];  // number of -t bind in each bin in xB
 double X[n_xB];
 double XX[n_xB];
@@ -93,7 +93,7 @@ const int Npx = 100;
  Float_t obs_y = -0.25;
  Float_t obs_z =  3.0;
 
- TCanvas *c0 = new TCanvas("c1","3D",1200,800);
+ TCanvas *c0 = new TCanvas("c0","3D",1200,800);
  TH2F *Hemb0 = new TH2F("emb0","emb0",200,-2.0,-1.1,200,-3,-1.8);
        Hemb0->GetXaxis()->SetLabelSize(0);
        Hemb0->GetYaxis()->SetLabelSize(0);
@@ -157,14 +157,14 @@ const int Npx = 100;
         
  TLine *hor_ax;
  // bt vs. xB division lines
-                for(int idiv=1;idiv<5;idiv++)
+                for(int idiv=1;idiv<6;idiv++)
                  {
                     X0 = (0.2*idiv-obs_x)*(X[0]-obs_y)/(X[0]-obs_y);
                     Z0 = (0.-obs_z)*(X[0]-obs_y)/(X[0]-obs_y);
                     X1 = (0.2*idiv-obs_x)*(X[0]-obs_y)/(X[8]-obs_y);
                     Z1 = (0.-obs_z)*(X[0]-obs_y)/(X[8]-obs_y);
                     vert_ax = new TLine(X0,Z0,X1,Z1);
-                    vert_ax->Draw();
+                    if(idiv != 4) vert_ax->Draw();
                   }
 
   // xB division lines 
@@ -177,9 +177,6 @@ const int Npx = 100;
      vert_ax = new TLine(X0,Z0,X1,Z1);
      vert_ax->Draw();
 
-     zaxis = new TGaxis(X0,Z0,X1,Z1,0,0.20,605);
-     zaxis->SetLineWidth(3);
-     //zaxis->Draw("same");
   }
      zaxis = new TGaxis(X0,Z0,X1,Z1,0,0.50,605);
      zaxis->SetLineWidth(3);
@@ -196,17 +193,28 @@ const int Npx = 100;
                   ob_ax->Draw();
                }
 
- for(int idiv=1;idiv<n_xB;idiv++)
+ for(int idiv=0;idiv<n_xB;idiv++)
   {
      X0 = (0.-obs_x)*(X[0]-obs_y)/(X[idiv]-obs_y);
      Z0 = (0.-obs_z)*(X[0]-obs_y)/(X[idiv]-obs_y);
      X1 = (1.-obs_x)*(X[0]-obs_y)/(X[idiv]-obs_y);
      Z1 = (0.-obs_z)*(X[0]-obs_y)/(X[idiv]-obs_y);
      hor_ax = new TLine(X0,Z0,X1,Z1);
-      hor_ax->Draw();
-     baxis = new TGaxis(X0,Z0,X1,Z1,0,3.999,605);
-     baxis->SetLineWidth(3);
-     //baxis->Draw("same");
+     hor_ax->Draw();
+    
+     if (idiv ==0 ){
+     TLatex *l2= new TLatex(X1-0.25, Z0+0.04,Form("x_{B}= %0.4f",XX[idiv]));
+             l2->SetTextSize(0.035);
+             l2->Draw("same");
+     }
+     else {
+     TLatex *l2= new TLatex(X1-0.27, Z0+0.01,Form("x_{B}= %0.4f",XX[idiv]));
+             l2->SetTextSize(0.035);
+             l2->Draw("same");
+ 
+     }
+ 
+
   }
      baxis->Draw("same");
 
@@ -216,12 +224,14 @@ const int Npx = 100;
  Float_t gb[Npx], gr[Npx], gdr[Npx];
  Float_t midX[Npx], midY[Npx];
 
- for(int ifit=0;ifit<n_xB;ifit++)
+ //for(int ifit=0;ifit<n_xB;ifit++)
+ for(int ifit=n_xB-1;ifit>=0;ifit--)
    {
      Float_t persp_fact;
      //if(ifit ==0 || ifit==2)  persp_fact = (X[ifit]-obs_y)/(X[2]-obs_y);
      //else if(ifit==1)  persp_fact = (X[0]-obs_y)/(X[ifit]-obs_y);
      persp_fact =  (X[0]-obs_y)/(X[ifit]-obs_y);
+     //persp_fact =  (X[ifit]-obs_y)/(X[8]-obs_y);
      
      X0 = (0.-obs_x)*persp_fact;
      Z0 = (0.-obs_z)*persp_fact;
@@ -248,15 +258,11 @@ const int Npx = 100;
     profile_G2D[ifit]->SetMarkerStyle(20);
     profile_G2D[ifit]->SetMarkerSize(0.3);
     profile_G2D[ifit]->SetMarkerColor(4);
-     if (ifit ==0) {profile_G2D[ifit]->SetFillColor(20); profile_G2D[ifit]->SetLineColor(20);        }
-    else if (ifit ==1) {profile_G2D[ifit]->SetFillColor(30); profile_G2D[ifit]->SetLineColor(30);   }
-    else if (ifit ==2) {profile_G2D[ifit]->SetFillColor(35); profile_G2D[ifit]->SetLineColor(35);   }
-    else if (ifit ==3) {profile_G2D[ifit]->SetFillColor(40); profile_G2D[ifit]->SetLineColor(40);   }
-    else if (ifit ==4) {profile_G2D[ifit]->SetFillColor(50); profile_G2D[ifit]->SetLineColor(50);   }
-    else if (ifit ==5) {profile_G2D[ifit]->SetFillColor(60); profile_G2D[ifit]->SetLineColor(60);   }
-    else if (ifit ==6) {profile_G2D[ifit]->SetFillColor(70); profile_G2D[ifit]->SetLineColor(70);   }
-    else if (ifit ==7) {profile_G2D[ifit]->SetFillColor(80); profile_G2D[ifit]->SetLineColor(80);   }
-    else if (ifit ==8) {profile_G2D[ifit]->SetFillColor(90); profile_G2D[ifit]->SetLineColor(90);   }
+    profile_G2D[ifit]->SetFillColor(20); 
+    profile_G2D[ifit]->SetLineColor(20); 
+    profile_G2D[ifit]->SetFillColorAlpha(kBlue, 0.35); 
+
+
     
     profile_G2D[ifit]->SetLineWidth(2);
     profile_G2D[ifit]->Draw("LPsameE3");
@@ -264,27 +270,6 @@ const int Npx = 100;
     profile_fun2d[ifit]->Draw("same");
   
  }
-
-
- // draw b and z axis again
-  X0 = (0.-obs_x)*(X[0]-obs_y)/(X[0]-obs_y);
-  Z0 = (0.-obs_z)*(X[0]-obs_y)/(X[0]-obs_y);
-  X1 = (1.-obs_x)*(X[0]-obs_y)/(X[0]-obs_y);
-  Z1 = (0.-obs_z)*(X[0]-obs_y)/(X[0]-obs_y);
- // b axis
-         baxis = new TGaxis(X0,Z0,X1,Z1,0,3.999,605);
-         baxis->SetLineWidth(3);
-         baxis->Draw("same");
-
- X0 = (0.-obs_x)*(X[0]-obs_y)/(X[0]-obs_y);
- Z0 = (0.-obs_z)*(X[0]-obs_y)/(X[0]-obs_y);
- X1 = (0.-obs_x)*(X[0]-obs_y)/(X[0]-obs_y);
- Z1 = (1.-obs_z)*(X[0]-obs_y)/(X[0]-obs_y);
-         zaxis = new TGaxis(X0,Z0,X1,Z1,0,0.5,605);
-         zaxis->SetLineWidth(3);
-         zaxis->Draw("same");
-
-
 
 
 
@@ -296,7 +281,7 @@ const int Npx = 100;
          comments->DrawLatex(-2.2,-2.42,"#rho(fm^{-2})");
          //comments->SetTextAngle(28);
          comments->SetTextSize(0.055);
-         //comments->DrawLatex(-1.8,-1.96,"^{4}He quark density profiles");
+         comments->DrawLatex(-1.5,-1.8,"^{4}He Quark Density Profiles");
 
    TLegend* leg = new TLegend(0.75,0.75,0.97,0.970);
    leg-> SetNColumns(2);
@@ -306,7 +291,7 @@ const int Npx = 100;
     for( int i=0; i<n_xB; i++){
    leg->AddEntry(profile_G2D[i],Form("<x_{B}>= %0.4f",XX[i]),"f");
    }
-   leg->Draw("same");
+   //leg->Draw("same");
 
 
 c0->Print("figs/png/nucl_profile_1.png");

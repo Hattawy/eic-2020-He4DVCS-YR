@@ -62,7 +62,9 @@ void analysis_dvcs_4He_t::Loop()
       gStyle->SetPaperSize(20,24);
       gStyle->SetLabelSize(0.05,"xy");
       gStyle->SetTitleSize(0.06,"xy");
-   
+  
+      const double xfac = 0.01;
+
       const int n_con = 1;
       const int n_xB = 9;
       const int n_t_0 = 14;
@@ -597,8 +599,8 @@ outfile.close();
           double ALU_fit_err = err[0];
 
           alu_t_x_err[ii][jj][kk] =  ALU_fit_err;
-          Im_t_x_err[ii][jj][kk]  = 0.01 * ffit->GetParError(0); 
-          Re_t_x_err[ii][jj][kk]  = 0.01 * ffit->GetParError(1);          
+          Im_t_x_err[ii][jj][kk]  = xfac * ffit->GetParError(0); 
+          Re_t_x_err[ii][jj][kk]  = xfac * ffit->GetParError(1);          
 
           }
     }
@@ -897,8 +899,8 @@ outfile.close();
           double ALU_fit_err = err[0];
 
           alu_t_x_1_err[ii][jj][kk] =  ALU_fit_err;
-          Im_t_x_1_err[ii][jj][kk]  = 0.01 * ffit->GetParError(0); 
-          Re_t_x_1_err[ii][jj][kk]  = 0.01 * ffit->GetParError(1);          
+          Im_t_x_1_err[ii][jj][kk]  = xfac * ffit->GetParError(0); 
+          Re_t_x_1_err[ii][jj][kk]  = xfac * ffit->GetParError(1);          
 
           }
     }
@@ -1194,8 +1196,8 @@ outfile.close();
           double ALU_fit_err = err[0];
 
           alu_t_x_2_err[ii][jj][kk] =  ALU_fit_err;
-          Im_t_x_2_err[ii][jj][kk]  = 0.01 * ffit->GetParError(0); 
-          Re_t_x_2_err[ii][jj][kk]  = 0.01 * ffit->GetParError(1);          
+          Im_t_x_2_err[ii][jj][kk]  = xfac * ffit->GetParError(0); 
+          Re_t_x_2_err[ii][jj][kk]  = xfac * ffit->GetParError(1);          
 
           }
     }
