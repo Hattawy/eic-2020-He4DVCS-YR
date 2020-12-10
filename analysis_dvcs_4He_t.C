@@ -1104,7 +1104,7 @@ outfile.close();
 
     ifstream infile_2;
     infile_2.open("imcff_recff_moh_4he_2.dat");
-    int n_row_2 = 72;
+    int n_row_2 = 45;
     int n_col_2 = 6;
     double parameters_2[n_row_2][n_col_2]; 
     for(int i =0; i<n_row_2; i++){
@@ -1138,9 +1138,9 @@ outfile.close();
 
 
 
-   TCanvas *c31 = new TCanvas("c31","",1300,1000 );
-            c31->Divide(n_t_2,n_xB,-0.00005,-0.00005); 
-            c31->SetGrid();
+   TCanvas *c32 = new TCanvas("c32","",1300,1000 );
+            c32->Divide(n_t_2,n_xB,-0.00005,-0.00005); 
+            c32->SetGrid();
 
    // as a function of -t in xB bins
    int counter_2 =1;
@@ -1151,8 +1151,8 @@ outfile.close();
             
           cout<< modle_Im_2[ii][jj][kk]<<"    "<<modle_Re_2[ii][jj][kk]<<endl; 
             
-          c31->SetGrid();
-          c31->cd(counter_2);
+          c32->SetGrid();
+          c32->cd(counter_2);
           counter_2++;
          
           h_dvcs_N_p_2[ii][jj][kk]->Sumw2(); 
@@ -1256,8 +1256,8 @@ outfile.close();
     }
    }
 
-    c31->Print("figs/png/BSA_Coherent_xB_t_phi_2.png");
-    c31->Print("figs/pdf/BSA_Coherent_xB_t_phi_2.pdf");
+    c32->Print("figs/png/BSA_Coherent_xB_t_phi_2.png");
+    c32->Print("figs/pdf/BSA_Coherent_xB_t_phi_2.pdf");
 
 
   vector<double> M_XB_2;   M_XB_2.resize(n_xB);
