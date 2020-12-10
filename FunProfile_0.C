@@ -61,15 +61,15 @@ const int Npx = 100;
   Bslopes[ifit]  = fitfun->GetParameter(1);
   dBslopes[ifit] = fitfun->GetParError(1);
  }
- CANfits->Print("figs/png/clas12_Him_slopes_0.png");
- CANfits->Print("figs/pdf/clas12_Him_slopes_0.pdf");
+ CANfits->Print("figs/png/Him_slopes_0.png");
+ CANfits->Print("figs/pdf/Him_slopes_0.pdf");
 
 
  // plot the profile densities ------------------------------------
  TCanvas *CANprofs = new TCanvas("CANprofs","CANprofs",3*400,1*400);
-          CANprofs->Divide(3,1);
+          CANprofs->Divide(n_xB,1);
 
- for(int ifit=0;ifit<3;ifit++){
+ for(int ifit=0;ifit<n_xB;ifit++){
     CANprofs->cd(ifit+1);
     TF1 *fun_prof = new TF1(Form("prof_%d",ifit+1),"[0]*TMath::Exp(-x*x/(4*[1]))",0,0.35);
          fun_prof->SetParameters(Bnorm[ifit],0.197*0.197*Bslopes[ifit]/2.);
@@ -83,8 +83,8 @@ const int Npx = 100;
          fun_profH->SetParameters(Bnorm[ifit]+dBnorm[ifit],0.197*0.197*(Bslopes[ifit]+dBslopes[ifit])/2.);
          fun_profH->Draw("same");
  }
- CANprofs->Print("figs/png/clas12_profiles_0.png");
- CANprofs->Print("figs/pdf/clas12_profiles_0.pdf");
+ CANprofs->Print("figs/png/profiles_0.png");
+ CANprofs->Print("figs/pdf/profiles_0.pdf");
 
  // plot the 3D profiles ------------------------------------------  
  gStyle->SetOptTitle(0);

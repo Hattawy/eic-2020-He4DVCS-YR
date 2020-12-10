@@ -7,8 +7,8 @@ void FunProfile_1(vector<vector<vector<double>>> mean_t,
 ){
 
 
-const int n_xB=9; // number of bins in xB
-const int n_t = 14; // number of bins in -t
+const int n_xB= 9; // number of bins in xB
+const int n_t = 8; // number of bins in -t
 int npt[n_xB];  // number of -t bind in each bin in xB
 double X[n_xB];
 double XX[n_xB];
@@ -42,7 +42,7 @@ const int Npx = 100;
 
  // plot the imaginary part of H -------------------------------
  TCanvas *CANfits = new TCanvas("CANfits","CANfits",3*400,1*400);
-          CANfits->Divide(3,1);
+          CANfits->Divide(n_xB,1);
 
  for(int ifit=0;ifit<n_xB;ifit++){
   CANfits->cd(ifit+1);
@@ -61,15 +61,15 @@ const int Npx = 100;
   Bslopes[ifit]  = fitfun->GetParameter(1);
   dBslopes[ifit] = fitfun->GetParError(1);
  }
- CANfits->Print("figs/png/clas12_Him_slopes_1.png");
- CANfits->Print("figs/pdf/clas12_Him_slopes_1.pdf");
+ CANfits->Print("figs/png/Him_slopes_1.png");
+ CANfits->Print("figs/pdf/Him_slopes_1.pdf");
 
 
  // plot the profile densities ------------------------------------
  TCanvas *CANprofs = new TCanvas("CANprofs","CANprofs",3*400,1*400);
-          CANprofs->Divide(3,1);
+          CANprofs->Divide(n_xB,1);
 
- for(int ifit=0;ifit<3;ifit++){
+ for(int ifit=0;ifit<n_xB;ifit++){
     CANprofs->cd(ifit+1);
     TF1 *fun_prof = new TF1(Form("prof_%d",ifit+1),"[0]*TMath::Exp(-x*x/(4*[1]))",0,0.35);
          fun_prof->SetParameters(Bnorm[ifit],0.197*0.197*Bslopes[ifit]/2.);
@@ -83,8 +83,8 @@ const int Npx = 100;
          fun_profH->SetParameters(Bnorm[ifit]+dBnorm[ifit],0.197*0.197*(Bslopes[ifit]+dBslopes[ifit])/2.);
          fun_profH->Draw("same");
  }
- CANprofs->Print("figs/png/clas12_profiles_1.png");
- CANprofs->Print("figs/pdf/clas12_profiles_1.pdf");
+ CANprofs->Print("figs/png/profiles_1.png");
+ CANprofs->Print("figs/pdf/profiles_1.pdf");
 
  // plot the 3D profiles ------------------------------------------  
  gStyle->SetOptTitle(0);
@@ -240,8 +240,8 @@ const int Npx = 100;
    for(int point=0;point<Npx;point++)
     {
       gb[point] = X0 + (point+0.5)*(X1-X0)/Npx;
-      gr[point] = (profile_fun2d[ifit]->Eval(gb[point]));
-      gdr[point] = 0.0015 *(TMath::Abs(Hprofile_fun2d[ifit]->Eval(gb[point])-profile_fun2d[ifit]->Eval(gb[point])));
+      gr[point]  = (profile_fun2d[ifit]->Eval(gb[point]));
+      gdr[point] = 0.013 *(TMath::Abs(Hprofile_fun2d[ifit]->Eval(gb[point])-profile_fun2d[ifit]->Eval(gb[point])));
      }
 
     profile_G2D[ifit] = new TGraphErrors(Npx,gb,gr,0,gdr);

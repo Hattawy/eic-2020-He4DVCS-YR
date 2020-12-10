@@ -953,9 +953,9 @@ outfile.close();
     M_XB_1[ii]= (hh_xB_1[ii]->GetMean());
     M_Q2_1[ii]= (hh_Q2_1[ii]->GetMean());
    }
-/*
+
     FunProfile_1(mean_t_1, mean_t_1_err, M_XB_1, M_Q2_1, Im_t_x_1, Im_t_x_1_err);
-*/
+
 
 
 
@@ -1268,9 +1268,9 @@ outfile.close();
     M_XB_2[ii]= (hh_xB_2[ii]->GetMean());
     M_Q2_2[ii]= (hh_Q2_2[ii]->GetMean());
    }
-/*
+
     FunProfile_2(mean_t_2, mean_t_2_err, M_XB_2, M_Q2_2, Im_t_x_2, Im_t_x_2_err);
-*/
+
 
 
 
