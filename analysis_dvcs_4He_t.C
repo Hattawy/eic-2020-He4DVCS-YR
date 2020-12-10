@@ -321,26 +321,6 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
           c66->Print("figs/png/coh_Q2_tt_0.png");
           c66->Print("figs/pdf/coh_Q2_tt_0.pdf");
 
-        c66->cd();
-           hh_xB_0[ii]   ->Draw();                        
-           hh_xB_0[ii]   ->GetXaxis()->CenterTitle(true);
-           hh_xB_0[ii]   ->SetXTitle("x_{B}");
-           hh_xB_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           hh_xB_0[ii]   ->SetLineWidth(2);
-          c66->SetLogy();
-          c66->Print("figs/png/coh_xB_0.png");
-          c66->Print("figs/pdf/coh_xB_0.pdf");
-
-        c66->cd();
-           hh_Q2_0[ii]   ->Draw();                        
-           hh_Q2_0[ii]   ->GetXaxis()->CenterTitle(true);
-           hh_Q2_0[ii]   ->SetXTitle("Q^{2} [GeV^{2}]");
-           hh_Q2_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           hh_Q2_0[ii]   ->SetLineWidth(2);
-          c66->SetLogy();
-          c66->Print("figs/png/coh_Q2_0.png");
-          c66->Print("figs/pdf/coh_Q2_0.pdf");
-
          }
 
 
@@ -555,7 +535,7 @@ outfile.close();
               if(ii==1) { hasy->SetMarkerColor(kBlue);  hasy->SetLineColor(kBlue); }
               if(ii==2) { hasy->SetMarkerColor(kRed);   hasy->SetLineColor(kRed);  }
               hasy->GetXaxis()->SetLimits(-5.0,365.0);
-              hasy->GetYaxis()->SetRangeUser(-0.5,0.5);
+              hasy->GetYaxis()->SetRangeUser(-0.6,0.6);
               if(ii==0) hasy->Draw();
               if(ii==1) hasy->Draw("same");
               if(ii==2) hasy->Draw("same");
@@ -671,26 +651,6 @@ outfile.close();
           c661->SetLogx();
           c661->Print("figs/png/coh_Q2_tt_1.png");
           c661->Print("figs/pdf/coh_Q2_tt_1.pdf");
-
-        c661->cd();
-           hh_xB_1[ii]   ->Draw();                        
-           hh_xB_1[ii]   ->GetXaxis()->CenterTitle(true);
-           hh_xB_1[ii]   ->SetXTitle("x_{B}");
-           hh_xB_1[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           hh_xB_1[ii]   ->SetLineWidth(2);
-          c661->SetLogy();
-          c661->Print("figs/png/coh_xB_1.png");
-          c661->Print("figs/pdf/coh_xB_1.pdf");
-
-        c661->cd();
-           hh_Q2_1[ii]   ->Draw();                        
-           hh_Q2_1[ii]   ->GetXaxis()->CenterTitle(true);
-           hh_Q2_1[ii]   ->SetXTitle("Q^{2} [GeV^{2}]");
-           hh_Q2_1[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           hh_Q2_1[ii]   ->SetLineWidth(2);
-          c661->SetLogy();
-          c661->Print("figs/png/coh_Q2_1.png");
-          c661->Print("figs/pdf/coh_Q2_1.pdf");
 
          }
 
@@ -880,7 +840,7 @@ outfile.close();
               if(ii==1) { hasy->SetMarkerColor(kBlue);  hasy->SetLineColor(kBlue); }
               if(ii==2) { hasy->SetMarkerColor(kRed);   hasy->SetLineColor(kRed);  }
               hasy->GetXaxis()->SetLimits(-5.0,365.0);
-              hasy->GetYaxis()->SetRangeUser(-0.5,0.5);
+              hasy->GetYaxis()->SetRangeUser(-0.6,0.6);
               if(ii==0) hasy->Draw();
               if(ii==1) hasy->Draw("same");
               if(ii==2) hasy->Draw("same");
@@ -988,26 +948,6 @@ outfile.close();
           c662->SetLogx();
           c662->Print("figs/png/coh_Q2_tt_2.png");
           c662->Print("figs/pdf/coh_Q2_tt_2.pdf");
-
-        c662->cd();
-           hh_xB_2[ii]   ->Draw();                        
-           hh_xB_2[ii]   ->GetXaxis()->CenterTitle(true);
-           hh_xB_2[ii]   ->SetXTitle("x_{B}");
-           hh_xB_2[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           hh_xB_2[ii]   ->SetLineWidth(2);
-          c662->SetLogy();
-          c662->Print("figs/png/coh_xB_2.png");
-          c662->Print("figs/pdf/coh_xB_2.pdf");
-
-        c662->cd();
-           hh_Q2_2[ii]   ->Draw();                        
-           hh_Q2_2[ii]   ->GetXaxis()->CenterTitle(true);
-           hh_Q2_2[ii]   ->SetXTitle("Q^{2} [GeV^{2}]");
-           hh_Q2_2[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           hh_Q2_2[ii]   ->SetLineWidth(2);
-          c662->SetLogy();
-          c662->Print("figs/png/coh_Q2_2.png");
-          c662->Print("figs/pdf/coh_Q2_2.pdf");
 
          }
 
@@ -1195,7 +1135,7 @@ outfile.close();
               if(ii==1) { hasy->SetMarkerColor(kBlue);  hasy->SetLineColor(kBlue); }
               if(ii==2) { hasy->SetMarkerColor(kRed);   hasy->SetLineColor(kRed);  }
               hasy->GetXaxis()->SetLimits(-5.0,365.0);
-              hasy->GetYaxis()->SetRangeUser(-0.5,0.5);
+              hasy->GetYaxis()->SetRangeUser(-0.6,0.6);
               if(ii==0) hasy->Draw();
               if(ii==1) hasy->Draw("same");
               if(ii==2) hasy->Draw("same");
