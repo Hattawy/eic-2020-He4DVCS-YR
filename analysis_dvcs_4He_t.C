@@ -29,16 +29,18 @@
 #include<vector>
 #include "plot_ALU_projections.C"
 #include "plot_CFF_projections.C"
-#include "FunProfile.C"
+#include "FunProfile_0.C"
+#include "FunProfile_1.C"
+#include "FunProfile_2.C"
 
 using namespace std;
 
 int Find_Run_Number(const char*);
 void Find_CFF( double xB, double t, double &Im, double &Re, int n_xB);
-void Calculate_CFF(double Q2, double xB, double t, double &A0, 
-                   double &A1, double &A2, double &A3, 
+void Calculate_CFF(double Q2, double xB, double t, double y, 
+                   double &A0, double &A1, double &A2, double &A3, 
                    double &c0_BH, double &c1_BH, double &c2_BH);
-void Calculate_ALU(double Q2, double xB, double t, double phi , double Im, double Re, double &ALU);
+void Calculate_ALU(double Q2, double xB, double t, double y, double phi , double Im, double Re, double &ALU);
 
 void analysis_dvcs_4He_t::Loop() 
 {
@@ -63,55 +65,132 @@ void analysis_dvcs_4He_t::Loop()
    
       const int n_con = 1;
       const int n_xB = 9;
-      const int n_t = 14;
+      const int n_t_0 = 14;
+      const int n_t_1 = 8;
+      const int n_t_2 = 5;
     
       double xB_lims[n_xB+1] = {0.0023, 0.0028, 0.0033, 0.004, 0.0048, 0.0057, 0.0068, 0.01, 0.015, 0.08};
-      double t_lims[n_t+1] = {0.01, 0.0125, 0.016, 
-                              0.02, 0.025, 0.031, 0.04, 
-                              0.05, 0.067, 0.090, 
-                              0.12, 0.155, 0.2, 0.26, 
-                              0.36};
+      double t_lims_0[n_t_0+1] = {0.01, 0.0125, 0.016, 0.02, 0.025, 0.031, 0.04, 0.05, 0.067, 0.090, 0.12, 0.155, 0.2, 0.26, 0.36};
+      double t_lims_1[n_t_1+1] = {0.04, 0.05, 0.067, 0.090, 0.12, 0.155, 0.2, 0.26, 0.36};
+      double t_lims_2[n_t_2+1] = {0.090, 0.12, 0.155, 0.2, 0.26, 0.36};
 
-  // 20 days at 1.5e34
-      TH1F * h_dvcs_N_p[n_con][n_xB][n_t];
-      TH1F * h_dvcs_N_m[n_con][n_xB][n_t];
+  // n_t_0
+      TH1F * h_dvcs_N_p_0[n_con][n_xB][n_t_0];
+      TH1F * h_dvcs_N_m_0[n_con][n_xB][n_t_0];
 
-      TH1D *h_t_xB_Coh[n_con][n_xB][n_t];
-      TH1D *h_t_Q2_Coh[n_con][n_xB][n_t];
-      TH1D *h_t_t_Coh[n_con][n_xB][n_t];
+      TH1D *h_t_xB_Coh_0[n_con][n_xB][n_t_0];
+      TH1D *h_t_Q2_Coh_0[n_con][n_xB][n_t_0];
+      TH1D *h_t_t_Coh_0[n_con][n_xB][n_t_0];
+      TH1D *h_t_y_Coh_0[n_con][n_xB][n_t_0];
  
-      TH2D *h_Q2_xB_Coh[n_con];
-      TH2D *h_Q2_tt_Coh[n_con];
-      TH2D *h_tt_xB_Coh[n_con];
+      TH2D *h_Q2_xB_Coh_0[n_con];
+      TH2D *h_Q2_tt_Coh_0[n_con];
+      TH2D *h_tt_xB_Coh_0[n_con];
 
-      TH1D *hh_xB[n_xB];
-      TH1D *hh_Q2[n_xB];
+      TH1D *hh_xB_0[n_xB];
+      TH1D *hh_Q2_0[n_xB];
 
-      for(int i=0; i<n_con; i++)
-      {
-         h_Q2_tt_Coh[i]  = new TH2D(Form("h_Q2_tt_Coh[%d]",i),"",500, 3.5, 32, 500, 0.006, 1);
-         h_Q2_xB_Coh[i]  = new TH2D(Form("h_Q2_xB_Coh[%d]",i),"",500, 0.001, 0.11, 500, 3.5, 32);
-         h_tt_xB_Coh[i]  = new TH2D(Form("h_tt_xB_Coh[%d]",i),"",500, 0.006, 1, 500, 0.0017, 0.11);
-        for(int j=0; j<n_xB; j++)
-         {
-           hh_xB[j] = new TH1D(Form("hh_xB[%d]",j),"", 300, 0, 0.11);
-           hh_Q2[j] = new TH1D(Form("hh_Q2[%d]",j),"", 300, 3.5, 32.0);
+      for(int i=0; i<n_con; i++) {
+         h_Q2_tt_Coh_0[i]  = new TH2D(Form("h_Q2_tt_Coh_0[%d]",i),"",500, 3.5, 32, 500, 0.006, 1);
+         h_Q2_xB_Coh_0[i]  = new TH2D(Form("h_Q2_xB_Coh_0[%d]",i),"",500, 0.001, 0.11, 500, 3.5, 32);
+         h_tt_xB_Coh_0[i]  = new TH2D(Form("h_tt_xB_Coh_0[%d]",i),"",500, 0.006, 1, 500, 0.0017, 0.11);
+        
+         for(int j=0; j<n_xB; j++) {
+           hh_xB_0[j] = new TH1D(Form("hh_xB_0[%d]",j),"", 300, 0, 0.11);
+           hh_Q2_0[j] = new TH1D(Form("hh_Q2_0[%d]",j),"", 300, 3.5, 32.0);
 
-          for(int k=0; k<n_t; k++)
-            {
+          for(int k=0; k<n_t_0; k++) {
             
-               h_dvcs_N_p[i][j][k] = new TH1F(Form("h_dvcs_N_p[%d][%d][%d]",i,j,k)," ", 12,0,360);
-               h_dvcs_N_m[i][j][k] = new TH1F(Form("h_dvcs_N_m[%d][%d][%d]",i,j,k)," ", 12,0,360);
+               h_dvcs_N_p_0[i][j][k] = new TH1F(Form("h_dvcs_N_p_0[%d][%d][%d]",i,j,k)," ", 12,0,360);
+               h_dvcs_N_m_0[i][j][k] = new TH1F(Form("h_dvcs_N_m_0[%d][%d][%d]",i,j,k)," ", 12,0,360);
  
-               h_t_Q2_Coh[i][j][k] = new TH1D(Form("h_t_Q2_Coh[%d][%d][%d]",i,j,k),"",300, 0.5, 32);
-               h_t_xB_Coh[i][j][k] = new TH1D(Form("h_t_xB_Coh[%d][%d][%d]",i,j,k),"",300, 0.0, 0.1);
-               h_t_t_Coh[i][j][k]  = new TH1D(Form("h_t_t_Coh[%d][%d][%d]",i,j,k),"",300, 0.0, 0.7);
-          }
-        }
-      }
+               h_t_Q2_Coh_0[i][j][k] = new TH1D(Form("h_t_Q2_Coh_0[%d][%d][%d]",i,j,k),"",300, 0.5, 32);
+               h_t_xB_Coh_0[i][j][k] = new TH1D(Form("h_t_xB_Coh_0[%d][%d][%d]",i,j,k),"",300, 0.0, 0.1);
+               h_t_t_Coh_0[i][j][k]  = new TH1D(Form("h_t_t_Coh_0[%d][%d][%d]",i,j,k),"",300, 0.0, 0.7);
+               h_t_y_Coh_0[i][j][k]  = new TH1D(Form("h_t_y_Coh_0[%d][%d][%d]",i,j,k),"",300, 0.0, 1.0);
+          }}}
 
-   TH1D *h_xsec = new TH1D("h_xsec","BH cross section",150, 0, 2.0);
-   
+
+
+  // n_t_1
+      TH1F * h_dvcs_N_p_1[n_con][n_xB][n_t_1];
+      TH1F * h_dvcs_N_m_1[n_con][n_xB][n_t_1];
+
+      TH1D *h_t_xB_Coh_1[n_con][n_xB][n_t_1];
+      TH1D *h_t_Q2_Coh_1[n_con][n_xB][n_t_1];
+      TH1D *h_t_t_Coh_1[n_con][n_xB][n_t_1];
+      TH1D *h_t_y_Coh_1[n_con][n_xB][n_t_1];
+ 
+      TH2D *h_Q2_xB_Coh_1[n_con];
+      TH2D *h_Q2_tt_Coh_1[n_con];
+      TH2D *h_tt_xB_Coh_1[n_con];
+
+      TH1D *hh_xB_1[n_xB];
+      TH1D *hh_Q2_1[n_xB];
+
+      for(int i=0; i<n_con; i++) {
+         h_Q2_tt_Coh_1[i]  = new TH2D(Form("h_Q2_tt_Coh_1[%d]",i),"",500, 3.5, 32, 500, 0.006, 1);
+         h_Q2_xB_Coh_1[i]  = new TH2D(Form("h_Q2_xB_Coh_1[%d]",i),"",500, 0.001, 0.11, 500, 3.5, 32);
+         h_tt_xB_Coh_1[i]  = new TH2D(Form("h_tt_xB_Coh_1[%d]",i),"",500, 0.006, 1, 500, 0.0017, 0.11);
+        
+         for(int j=0; j<n_xB; j++) {
+           hh_xB_1[j] = new TH1D(Form("hh_xB_1[%d]",j),"", 300, 0, 0.11);
+           hh_Q2_1[j] = new TH1D(Form("hh_Q2_1[%d]",j),"", 300, 3.5, 32.0);
+
+          for(int k=0; k<n_t_1; k++) {
+            
+               h_dvcs_N_p_1[i][j][k] = new TH1F(Form("h_dvcs_N_p_1[%d][%d][%d]",i,j,k)," ", 12,0,360);
+               h_dvcs_N_m_1[i][j][k] = new TH1F(Form("h_dvcs_N_m_1[%d][%d][%d]",i,j,k)," ", 12,0,360);
+ 
+               h_t_Q2_Coh_1[i][j][k] = new TH1D(Form("h_t_Q2_Coh_1[%d][%d][%d]",i,j,k),"",300, 0.5, 32);
+               h_t_xB_Coh_1[i][j][k] = new TH1D(Form("h_t_xB_Coh_1[%d][%d][%d]",i,j,k),"",300, 0.0, 0.1);
+               h_t_t_Coh_1[i][j][k]  = new TH1D(Form("h_t_t_Coh_1[%d][%d][%d]",i,j,k),"",300, 0.0, 0.7);
+               h_t_y_Coh_1[i][j][k]  = new TH1D(Form("h_t_y_Coh_1[%d][%d][%d]",i,j,k),"",300, 0.0, 1.0);
+          }}}
+
+ 
+
+  // n_t_2
+      TH1F * h_dvcs_N_p_2[n_con][n_xB][n_t_2];
+      TH1F * h_dvcs_N_m_2[n_con][n_xB][n_t_2];
+
+      TH1D *h_t_xB_Coh_2[n_con][n_xB][n_t_2];
+      TH1D *h_t_Q2_Coh_2[n_con][n_xB][n_t_2];
+      TH1D *h_t_t_Coh_2[n_con][n_xB][n_t_2];
+      TH1D *h_t_y_Coh_2[n_con][n_xB][n_t_2];
+ 
+      TH2D *h_Q2_xB_Coh_2[n_con];
+      TH2D *h_Q2_tt_Coh_2[n_con];
+      TH2D *h_tt_xB_Coh_2[n_con];
+
+      TH1D *hh_xB_2[n_xB];
+      TH1D *hh_Q2_2[n_xB];
+
+      for(int i=0; i<n_con; i++) {
+         h_Q2_tt_Coh_2[i]  = new TH2D(Form("h_Q2_tt_Coh_2[%d]",i),"",500, 3.5, 32, 500, 0.006, 1);
+         h_Q2_xB_Coh_2[i]  = new TH2D(Form("h_Q2_xB_Coh_2[%d]",i),"",500, 0.001, 0.11, 500, 3.5, 32);
+         h_tt_xB_Coh_2[i]  = new TH2D(Form("h_tt_xB_Coh_2[%d]",i),"",500, 0.006, 1, 500, 0.0017, 0.11);
+        
+         for(int j=0; j<n_xB; j++) {
+           hh_xB_2[j] = new TH1D(Form("hh_xB_2[%d]",j),"", 300, 0, 0.11);
+           hh_Q2_2[j] = new TH1D(Form("hh_Q2_2[%d]",j),"", 300, 3.5, 32.0);
+
+          for(int k=0; k<n_t_2; k++) {
+            
+               h_dvcs_N_p_2[i][j][k] = new TH1F(Form("h_dvcs_N_p_2[%d][%d][%d]",i,j,k)," ", 12,0,360);
+               h_dvcs_N_m_2[i][j][k] = new TH1F(Form("h_dvcs_N_m_2[%d][%d][%d]",i,j,k)," ", 12,0,360);
+ 
+               h_t_Q2_Coh_2[i][j][k] = new TH1D(Form("h_t_Q2_Coh_2[%d][%d][%d]",i,j,k),"",300, 0.5, 32);
+               h_t_xB_Coh_2[i][j][k] = new TH1D(Form("h_t_xB_Coh_2[%d][%d][%d]",i,j,k),"",300, 0.0, 0.1);
+               h_t_t_Coh_2[i][j][k]  = new TH1D(Form("h_t_t_Coh_2[%d][%d][%d]",i,j,k),"",300, 0.0, 0.7);
+               h_t_y_Coh_2[i][j][k]  = new TH1D(Form("h_t_y_Coh_2[%d][%d][%d]",i,j,k),"",300, 0.0, 1.0);
+          }}}
+
+ 
+
+
+
+
    if (fChain == 0) return;
 
    Long64_t nentries = fChain->GetEntriesFast();
@@ -146,87 +225,126 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
 
       int which_Q2 = 0;
       int which_xB = -1;
-      int which_t  = -1;
+      int which_t_0  = -1;
+      int which_t_1  = -1;
+      int which_t_2  = -1;
       
-      for(int ii=0; ii<n_xB; ii++){
-         if(xB_lims[ii]<=Xbj && Xbj <xB_lims[ii+1]) which_xB = ii ; }
+      for(int ii=0; ii<n_xB; ii++){ if(xB_lims[ii]<=Xbj && Xbj <xB_lims[ii+1]) which_xB = ii ; }
+      for(int ii=0; ii<n_t_0; ii++){ if(t_lims_0[ii]<=t && t <t_lims_0[ii+1]) which_t_0 = ii ; }
+      for(int ii=0; ii<n_t_1; ii++){ if(t_lims_1[ii]<=t && t <t_lims_1[ii+1]) which_t_1 = ii ; }
+      for(int ii=0; ii<n_t_2; ii++){ if(t_lims_2[ii]<=t && t <t_lims_2[ii+1]) which_t_2 = ii ; }
       
-      for(int ii=0; ii<n_t; ii++){
-         if(t_lims[ii]<=t && t <t_lims[ii+1]) which_t = ii ; }
+      if(t>= t_lims_0[0]) {     
+         h_tt_xB_Coh_0[which_Q2]  ->Fill(t, Xbj);
+         h_Q2_xB_Coh_0[which_Q2]  ->Fill(Xbj, Q2);
+         h_Q2_tt_Coh_0[which_Q2]  ->Fill( Q2,t);
       
-           h_tt_xB_Coh[which_Q2]  ->Fill(t, Xbj);
-           h_Q2_xB_Coh[which_Q2]  ->Fill(Xbj, Q2);
-           h_Q2_tt_Coh[which_Q2]  ->Fill( Q2,t);
+         if (which_xB > -1 && which_t_0 > -1 ) {
+              if (helicity == 1 )      h_dvcs_N_p_0[which_Q2][which_xB][which_t_0]->Fill(phih,1.0); 
+              else if (helicity == -1) h_dvcs_N_m_0[which_Q2][which_xB][which_t_0]->Fill(phih,1.0);
+      
+              h_t_Q2_Coh_0[which_Q2][which_xB][which_t_0]->Fill(Q2);
+              h_t_xB_Coh_0[which_Q2][which_xB][which_t_0]->Fill(Xbj);
+              h_t_t_Coh_0[which_Q2][which_xB][which_t_0]->Fill(t);
+              h_t_y_Coh_0[which_Q2][which_xB][which_t_0]->Fill(y);
+     
+              hh_xB_0[which_xB]        ->Fill(Xbj);
+              hh_Q2_0[which_xB]        ->Fill(Q2); 
+         } }
 
-           if (which_xB > -1 && which_t > -1 ) {
-                if (helicity == 1 )      h_dvcs_N_p[which_Q2][which_xB][which_t]->Fill(phih,1.0); 
-                else if (helicity == -1) h_dvcs_N_m[which_Q2][which_xB][which_t]->Fill(phih,1.0);
 
-                h_t_Q2_Coh[which_Q2][which_xB][which_t]->Fill(Q2);
-                h_t_xB_Coh[which_Q2][which_xB][which_t]->Fill(Xbj);
-                h_t_t_Coh[which_Q2][which_xB][which_t]->Fill(t);
-  
-                hh_xB[which_xB]        ->Fill(Xbj);
-                hh_Q2[which_xB]        ->Fill(Q2);
+      if(t>= t_lims_1[0]) {     
+         h_tt_xB_Coh_1[which_Q2]  ->Fill(t, Xbj);
+         h_Q2_xB_Coh_1[which_Q2]  ->Fill(Xbj, Q2);
+         h_Q2_tt_Coh_1[which_Q2]  ->Fill( Q2,t);
+      
+         if (which_xB > -1 && which_t_1 > -1 ) {
+              if (helicity == 1 )      h_dvcs_N_p_1[which_Q2][which_xB][which_t_1]->Fill(phih,1.0); 
+              else if (helicity == -1) h_dvcs_N_m_1[which_Q2][which_xB][which_t_1]->Fill(phih,1.0);
+      
+              h_t_Q2_Coh_1[which_Q2][which_xB][which_t_0]->Fill(Q2);
+              h_t_xB_Coh_1[which_Q2][which_xB][which_t_0]->Fill(Xbj);
+              h_t_t_Coh_1[which_Q2][which_xB][which_t_0]->Fill(t);
+              h_t_y_Coh_1[which_Q2][which_xB][which_t_0]->Fill(y);
+     
+              hh_xB_1[which_xB]        ->Fill(Xbj);
+              hh_Q2_1[which_xB]        ->Fill(Q2); 
+         } }
 
-             }
 
-   }
+      if(t>= t_lims_2[0]) {     
+         h_tt_xB_Coh_2[which_Q2]  ->Fill(t, Xbj);
+         h_Q2_xB_Coh_2[which_Q2]  ->Fill(Xbj, Q2);
+         h_Q2_tt_Coh_2[which_Q2]  ->Fill( Q2,t);
+      
+         if (which_xB > -1 && which_t_2 > -1 ) {
+              if (helicity == 1 )      h_dvcs_N_p_2[which_Q2][which_xB][which_t_2]->Fill(phih,1.0); 
+              else if (helicity == -1) h_dvcs_N_m_2[which_Q2][which_xB][which_t_2]->Fill(phih,1.0);
+      
+              h_t_Q2_Coh_2[which_Q2][which_xB][which_t_2]->Fill(Q2);
+              h_t_xB_Coh_2[which_Q2][which_xB][which_t_2]->Fill(Xbj);
+              h_t_t_Coh_2[which_Q2][which_xB][which_t_2]->Fill(t);
+              h_t_y_Coh_2[which_Q2][which_xB][which_t_2]->Fill(y);
+     
+              hh_xB_2[which_xB]        ->Fill(Xbj);
+              hh_Q2_2[which_xB]        ->Fill(Q2); 
+         } }
+
+   }  // end the loop over the events 
 
 
     TCanvas *c66 = new TCanvas("c66","",650,550 );
      for(int ii=0; ii<n_con; ii++){
+      
+        c66->cd();
+           h_Q2_xB_Coh_0[ii]   ->Draw("colz");
+           h_Q2_xB_Coh_0[ii]   ->GetYaxis()->CenterTitle(true);
+           h_Q2_xB_Coh_0[ii]   ->SetYTitle("Q^{2} [GeV^{2}]");
+           h_Q2_xB_Coh_0[ii]   ->GetYaxis()->SetTitleSize(0.07);
+           h_Q2_xB_Coh_0[ii]   ->GetXaxis()->CenterTitle(true);
+           h_Q2_xB_Coh_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
+           h_Q2_xB_Coh_0[ii]   ->SetXTitle("x_{B}");
+          c66->SetLogx();
+          c66->Print("figs/png/coh_Q2_xB_0.png");
+          c66->Print("figs/pdf/coh_Q2_xB_0.pdf");
         
         c66->cd();
-           h_Q2_xB_Coh[ii]   ->Draw("colz");
-           h_Q2_xB_Coh[ii]   ->GetYaxis()->CenterTitle(true);
-           h_Q2_xB_Coh[ii]   ->SetYTitle("Q^{2} [GeV^{2}]");
-           h_Q2_xB_Coh[ii]   ->GetYaxis()->SetTitleSize(0.07);
-           h_Q2_xB_Coh[ii]   ->GetXaxis()->CenterTitle(true);
-           h_Q2_xB_Coh[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           h_Q2_xB_Coh[ii]   ->SetXTitle("x_{B}");
-          c66->SetLogx();
-          c66->Print(Form("figs/png/coh_Q2_xB%d.png",ii));
-          c66->Print(Form("figs/pdf/coh_Q2_xB%d.pdf",ii));
-        
-        c66->cd();
-           h_Q2_tt_Coh[ii]   ->Draw("colz");
-           h_Q2_tt_Coh[ii]   ->GetXaxis()->CenterTitle(true);
-           h_Q2_tt_Coh[ii]   ->SetXTitle("Q^{2} [GeV^{2}]");
-           h_Q2_tt_Coh[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           h_Q2_tt_Coh[ii]   ->GetYaxis()->CenterTitle(true);
-           h_Q2_tt_Coh[ii]   ->GetYaxis()->SetTitleSize(0.07);
-           h_Q2_tt_Coh[ii]   ->SetYTitle("-t [GeV^{2}]");
+           h_Q2_tt_Coh_0[ii]   ->Draw("colz");
+           h_Q2_tt_Coh_0[ii]   ->GetXaxis()->CenterTitle(true);
+           h_Q2_tt_Coh_0[ii]   ->SetXTitle("Q^{2} [GeV^{2}]");
+           h_Q2_tt_Coh_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
+           h_Q2_tt_Coh_0[ii]   ->GetYaxis()->CenterTitle(true);
+           h_Q2_tt_Coh_0[ii]   ->GetYaxis()->SetTitleSize(0.07);
+           h_Q2_tt_Coh_0[ii]   ->SetYTitle("-t [GeV^{2}]");
           c66->SetLogy();
           c66->SetLogx();
-          c66->Print(Form("figs/png/coh_Q2_tt%d.png",ii));
-          c66->Print(Form("figs/pdf/coh_Q2_tt%d.pdf",ii));
+          c66->Print("figs/png/coh_Q2_tt_0.png");
+          c66->Print("figs/pdf/coh_Q2_tt_0.pdf");
 
         c66->cd();
-           hh_xB[ii]   ->Draw();                        
-           hh_xB[ii]   ->GetXaxis()->CenterTitle(true);
-           hh_xB[ii]   ->SetXTitle("x_{B}");
-           hh_xB[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           hh_xB[ii]   ->SetLineWidth(2);
+           hh_xB_0[ii]   ->Draw();                        
+           hh_xB_0[ii]   ->GetXaxis()->CenterTitle(true);
+           hh_xB_0[ii]   ->SetXTitle("x_{B}");
+           hh_xB_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
+           hh_xB_0[ii]   ->SetLineWidth(2);
           c66->SetLogy();
-          c66->Print(Form("figs/png/coh_xB_%d.png",ii));
-          c66->Print(Form("figs/pdf/coh_xB_%d.pdf",ii));
+          c66->Print("figs/png/coh_xB_0.png");
+          c66->Print("figs/pdf/coh_xB_0.pdf");
 
         c66->cd();
-           hh_Q2[ii]   ->Draw();                        
-           hh_Q2[ii]   ->GetXaxis()->CenterTitle(true);
-           hh_Q2[ii]   ->SetXTitle("Q^{2} [GeV^{2}]");
-           hh_Q2[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           hh_Q2[ii]   ->SetLineWidth(2);
+           hh_Q2_0[ii]   ->Draw();                        
+           hh_Q2_0[ii]   ->GetXaxis()->CenterTitle(true);
+           hh_Q2_0[ii]   ->SetXTitle("Q^{2} [GeV^{2}]");
+           hh_Q2_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
+           hh_Q2_0[ii]   ->SetLineWidth(2);
           c66->SetLogy();
-          c66->Print(Form("figs/png/coh_Q2_%d.png",ii));
-          c66->Print(Form("figs/pdf/coh_Q2_%d.pdf",ii));
+          c66->Print("figs/png/coh_Q2_0.png");
+          c66->Print("figs/pdf/coh_Q2_0.pdf");
 
          }
-/* 
-    TCanvas *c55 = new TCanvas("c55","",750,600 ); 
-             c55->cd();  
-*/    
+
+
+
     TLine *l = new TLine();
            l->SetLineWidth(2);
            l->SetLineColor(kBlack);
@@ -236,22 +354,22 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
      for(int ii=0; ii<n_con; ii++){
         
         c6->cd();
-           h_tt_xB_Coh[ii]   ->Draw("colz");
-           h_tt_xB_Coh[ii]   ->GetXaxis()->CenterTitle(true);
-           h_tt_xB_Coh[ii]   ->SetXTitle("-t [GeV^{2}]");
-           h_tt_xB_Coh[ii]   ->GetXaxis()->SetTitleSize(0.07);
-           h_tt_xB_Coh[ii]   ->GetYaxis()->CenterTitle(true);
-           h_tt_xB_Coh[ii]   ->GetYaxis()->SetTitleSize(0.07);
-           h_tt_xB_Coh[ii]   ->SetYTitle("x_{B}");
+           h_tt_xB_Coh_0[ii]   ->Draw("colz");
+           h_tt_xB_Coh_0[ii]   ->GetXaxis()->CenterTitle(true);
+           h_tt_xB_Coh_0[ii]   ->SetXTitle("-t [GeV^{2}]");
+           h_tt_xB_Coh_0[ii]   ->GetXaxis()->SetTitleSize(0.07);
+           h_tt_xB_Coh_0[ii]   ->GetYaxis()->CenterTitle(true);
+           h_tt_xB_Coh_0[ii]   ->GetYaxis()->SetTitleSize(0.07);
+           h_tt_xB_Coh_0[ii]   ->SetYTitle("x_{B}");
               c6->SetLogz();
               c6->SetLogx();
               c6->SetLogy();
                  for(int i=0; i<n_xB+1;i++)
-                     l->DrawLine(t_lims[0],  xB_lims[i], t_lims[n_t], xB_lims[i]);
-                 for(int i=0; i<n_t+1;i++)
-                        l->DrawLine(t_lims[i], xB_lims[0], t_lims[i], xB_lims[n_xB]);
-          c6->Print(Form("figs/png/coh_t_xB%d.png",ii));
-          c6->Print(Form("figs/pdf/coh_t_xB%d.pdf",ii));
+                     l->DrawLine(t_lims_0[0],  xB_lims[i], t_lims_0[n_t_0], xB_lims[i]);
+                 for(int i=0; i<n_t_0+1;i++)
+                        l->DrawLine(t_lims_0[i], xB_lims[0], t_lims_0[i], xB_lims[n_xB]);
+          c6->Print("figs/png/coh_t_xB_0.png");
+          c6->Print("figs/pdf/coh_t_xB_0.pdf");
          }
  
 
@@ -264,10 +382,12 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
     vector<vector<vector<double>>> modle_Im ;
     vector<vector<vector<double>>> modle_Re ;
 
-    vector<vector<vector<double>>> mean_t      ;
+    vector<vector<vector<double>>> mean_y      ;
+    vector<vector<vector<double>>> mean_t_0      ;
     vector<vector<vector<double>>> mean_x      ;
     vector<vector<vector<double>>> mean_Q2     ;
-    vector<vector<vector<double>>> mean_t_err  ;
+    vector<vector<vector<double>>> mean_y_err  ;
+    vector<vector<vector<double>>> mean_t_0_err  ;
     vector<vector<vector<double>>> mean_x_err  ;
     vector<vector<vector<double>>> mean_Q2_err ;
 
@@ -280,10 +400,12 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
     modle_Im   .resize(n_con);
     modle_Re   .resize(n_con);
 
-    mean_t     .resize(n_con);
+    mean_y     .resize(n_con);
+    mean_t_0     .resize(n_con);
     mean_x     .resize(n_con);
     mean_Q2    .resize(n_con);
-    mean_t_err .resize(n_con);
+    mean_y_err .resize(n_con);
+    mean_t_0_err .resize(n_con);
     mean_x_err .resize(n_con);
     mean_Q2_err.resize(n_con);
 
@@ -298,30 +420,34 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
        modle_Im[ii]   .resize(n_xB);
        modle_Re[ii]   .resize(n_xB);
 
-       mean_t[ii]     .resize(n_xB);
+       mean_y[ii]     .resize(n_xB);
+       mean_t_0[ii]     .resize(n_xB);
        mean_x[ii]     .resize(n_xB);
        mean_Q2[ii]    .resize(n_xB);
-       mean_t_err[ii] .resize(n_xB);
+       mean_y_err[ii] .resize(n_xB);
+       mean_t_0_err[ii] .resize(n_xB);
        mean_x_err[ii] .resize(n_xB);
        mean_Q2_err[ii].resize(n_xB);
    
        for(int jj=0; jj<n_xB; jj++){
 
-          alu_t_x[ii][jj]     .resize(n_t); 
-          alu_t_x_err[ii][jj] .resize(n_t);
-          Im_t_x[ii][jj]      .resize(n_t); 
-          Im_t_x_err[ii][jj]  .resize(n_t);
-          Re_t_x[ii][jj]      .resize(n_t); 
-          Re_t_x_err[ii][jj]  .resize(n_t);
-          modle_Im[ii][jj]    .resize(n_t);
-          modle_Re[ii][jj]    .resize(n_t);
+          alu_t_x[ii][jj]     .resize(n_t_0); 
+          alu_t_x_err[ii][jj] .resize(n_t_0);
+          Im_t_x[ii][jj]      .resize(n_t_0); 
+          Im_t_x_err[ii][jj]  .resize(n_t_0);
+          Re_t_x[ii][jj]      .resize(n_t_0); 
+          Re_t_x_err[ii][jj]  .resize(n_t_0);
+          modle_Im[ii][jj]    .resize(n_t_0);
+          modle_Re[ii][jj]    .resize(n_t_0);
 
-          mean_t[ii][jj]      .resize(n_t);
-          mean_x[ii][jj]      .resize(n_t);
-          mean_Q2[ii][jj]     .resize(n_t);
-          mean_t_err[ii][jj]  .resize(n_t);
-          mean_x_err[ii][jj]  .resize(n_t);
-          mean_Q2_err[ii][jj] .resize(n_t);
+          mean_y[ii][jj]      .resize(n_t_0);
+          mean_t_0[ii][jj]      .resize(n_t_0);
+          mean_x[ii][jj]      .resize(n_t_0);
+          mean_Q2[ii][jj]     .resize(n_t_0);
+          mean_y_err[ii][jj]  .resize(n_t_0);
+          mean_t_0_err[ii][jj]  .resize(n_t_0);
+          mean_x_err[ii][jj]  .resize(n_t_0);
+          mean_Q2_err[ii][jj] .resize(n_t_0);
  
        }
     }
@@ -349,28 +475,21 @@ for (Long64_t jentry=0; jentry<nentries;jentry++)
 
     for(int ii=0; ii<1; ii++){
        for(int jj=0; jj<n_xB; jj++){
-          for(int kk=0; kk<n_t; kk++){
+          for(int kk=0; kk<n_t_0; kk++){
              c66->cd();          
-             mean_Q2[ii][jj][kk] = h_t_Q2_Coh[ii][jj][kk]->GetMean();
-             mean_x[ii][jj][kk]  = h_t_xB_Coh[ii][jj][kk]->GetMean();
-             mean_t[ii][jj][kk]  = h_t_t_Coh[ii][jj][kk]->GetMean();
+             mean_Q2[ii][jj][kk] = h_t_Q2_Coh_0[ii][jj][kk]->GetMean();
+             mean_x[ii][jj][kk]  = h_t_xB_Coh_0[ii][jj][kk]->GetMean();
+             mean_t_0[ii][jj][kk]  = h_t_t_Coh_0[ii][jj][kk]->GetMean();
+             mean_y[ii][jj][kk]  = h_t_y_Coh_0[ii][jj][kk]->GetMean();
 
              mean_Q2_err[ii][jj][kk] = 0.0;
              mean_x_err[ii][jj][kk] = 0.0;
-             mean_t_err[ii][jj][kk] = 0.0;//(t_lims[kk+1]-t_lims[kk])/2.4;
-          // h_t_Q2_Coh[ii][jj][kk]->Draw();
-          // c66->Print(Form("figs/slices/coh_Q2%d_%d_%d.png",ii,jj,kk));
-
-          // h_t_xB_Coh[ii][jj][kk]->Draw();
-          // c66->Print(Form("figs/slices/coh_xB%d_%d_%d.png",ii,jj,kk));
-
-          // h_t_t_Coh[ii][jj][kk]->Draw();
-          // c66->Print(Form("figs/slices/coh_t%d_%d_%d.png",ii,jj,kk));
+             mean_t_0_err[ii][jj][kk] = 0.0;
+             mean_y_err[ii][jj][kk] = 0.0;
     
-             outfile <<ncc<<"  "<<h_t_Q2_Coh[ii][jj][kk]->GetMean()<<"   "<<h_t_xB_Coh[ii][jj][kk]->GetMean()<<"   "<<h_t_t_Coh[ii][jj][kk]->GetMean()<<"\n";    
+             outfile <<ncc<<"  "<<h_t_Q2_Coh_0[ii][jj][kk]->GetMean()<<"   "<<h_t_xB_Coh_0[ii][jj][kk]->GetMean()<<"   "<<h_t_t_Coh_0[ii][jj][kk]->GetMean()<<"\n";    
              modle_Im[ii][jj][kk] = parameters[ncc-1][4]; 
              modle_Re[ii][jj][kk] = parameters[ncc-1][5];
-             cout<<ncc<<"     "<<parameters[ncc-1][0]<<"    "<< modle_Im[ii][jj][kk]<<"    "<<modle_Re[ii][jj][kk]<<endl; 
              ncc++;
           }
        }
@@ -380,48 +499,47 @@ outfile.close();
 
 
    TCanvas *c3 = new TCanvas("c3","",1300,1000 );
-            c3->Divide(n_t,n_xB,-0.00005,-0.00005); 
+            c3->Divide(n_t_0,n_xB,-0.00005,-0.00005); 
             c3->SetGrid();
 
    // as a function of -t in xB bins
    int counter =1;
    for(int ii=0; ii<1; ii++){
     for(int jj=n_xB-1; jj>=0; jj--){
-       for(int kk=0; kk<n_t; kk++){
-            c3->SetGrid();
-            c3->cd(counter);
-            counter++;
-//         if (jj == 0) c3->cd(5*kk +1);
-//         if (jj == 1) c3->cd(5*kk +2);
-//         if (jj == 2) c3->cd(5*kk +3);
-//         if (jj == 3) c3->cd(5*kk +4);
-//         if (jj == 4) c3->cd(5*kk +5);
+    //for(int jj=0; jj<n_xB; jj++){
+       for(int kk=0; kk<n_t_0; kk++){
+            
+          cout<< modle_Im[ii][jj][kk]<<"    "<<modle_Re[ii][jj][kk]<<endl; 
+            
+          c3->SetGrid();
+          c3->cd(counter);
+          counter++;
          
-         h_dvcs_N_p[ii][jj][kk]->Sumw2(); 
-         h_dvcs_N_m[ii][jj][kk]->Sumw2();
+          h_dvcs_N_p_0[ii][jj][kk]->Sumw2(); 
+          h_dvcs_N_m_0[ii][jj][kk]->Sumw2();
          
-         TH1* hsum=(TH1*)h_dvcs_N_p[ii][jj][kk]->Clone("hsum");
-         TH1* hdif=(TH1*)h_dvcs_N_p[ii][jj][kk]->Clone("hdif");
-         hsum->Add(h_dvcs_N_m[ii][jj][kk]);
-         hdif->Add(h_dvcs_N_m[ii][jj][kk],-1);
+          TH1* hsum=(TH1*)h_dvcs_N_p_0[ii][jj][kk]->Clone("hsum");
+          TH1* hdif=(TH1*)h_dvcs_N_p_0[ii][jj][kk]->Clone("hdif");
+          hsum->Add(h_dvcs_N_m_0[ii][jj][kk]);
+          hdif->Add(h_dvcs_N_m_0[ii][jj][kk],-1);
          
-         TH1* hasy=(TH1*)hdif->Clone("hasy");
-              hasy->Divide(hsum);
+          TH1* hasy=(TH1*)hdif->Clone("hasy");
+               hasy->Divide(hsum);
               
               cout<<"n bins in phi = "<< hasy->GetNbinsX()<<endl;
-              for(int yy=1; yy<hasy->GetNbinsX()+1; yy++){
-                  double phi_hh = hasy->GetBinCenter(yy);
+              for(int mm=1; mm<hasy->GetNbinsX()+1; mm++){
+                  double phi_hh = hasy->GetBinCenter(mm);
                   double ALU_phi = -0.1;
                   double Im, Re;
-                  Find_CFF( mean_x[ii][jj][kk], mean_t[ii][jj][kk], Im, Re, jj);
-                  //Im = modle_Im[ii][jj][kk]/4.0;
-                  //Re = modle_Re[ii][jj][kk]/4.0;
+                  //Find_CFF( mean_x[ii][jj][kk], mean_t[ii][jj][kk], Im, Re, jj);
+                  Im = modle_Im[ii][jj][kk];
+                  Re = modle_Re[ii][jj][kk];
                   //Re = 0.0;
 
-                  Calculate_ALU(mean_Q2[ii][jj][kk], mean_x[ii][jj][kk], -1.0*mean_t[ii][jj][kk], phi_hh, Im, Re, ALU_phi); 
+                  Calculate_ALU(mean_Q2[ii][jj][kk], mean_x[ii][jj][kk], -1.0*mean_t_0[ii][jj][kk], mean_y[ii][jj][kk],  phi_hh, Im, Re, ALU_phi); 
 
-                  hasy->SetBinContent(yy, 22.0*ALU_phi);
-                  //cout<<hasy->GetBinCenter(yy)<<"    "<< hasy->GetBinContent(yy)<<endl;
+                  hasy->SetBinContent(mm, ALU_phi);
+                  cout<<hasy->GetBinCenter(mm)<<"    "<< hasy->GetBinContent(mm)<<endl;
               }
 
 
@@ -437,14 +555,14 @@ outfile.close();
               if(ii==1) { hasy->SetMarkerColor(kBlue);  hasy->SetLineColor(kBlue); }
               if(ii==2) { hasy->SetMarkerColor(kRed);   hasy->SetLineColor(kRed);  }
               hasy->GetXaxis()->SetLimits(-5.0,365.0);
-              hasy->GetYaxis()->SetRangeUser(-0.3,0.3);
+              hasy->GetYaxis()->SetRangeUser(-0.5,0.5);
               if(ii==0) hasy->Draw();
               if(ii==1) hasy->Draw("same");
               if(ii==2) hasy->Draw("same");
 
           TLatex *l2= new TLatex(10.0,-0.1,Form("%.4f< x_{B} <%.4f",xB_lims[jj], xB_lims[jj+1]));
                   l2->Draw("same");
-          TLatex *l3= new TLatex(10.0,-0.2,Form("%.4f< -t <%.4f",t_lims[kk], t_lims[kk+1]));
+          TLatex *l3= new TLatex(10.0,-0.2,Form("%.4f< -t <%.4f",t_lims_0[kk], t_lims_0[kk+1]));
                   l3->Draw("same");
 
           // TF1 *myfit;
@@ -454,7 +572,7 @@ outfile.close();
           // myfit->SetLineWidth(2);
 
           double  A0, A1, A2, A3, c0_BH, c1_BH, c2_BH; 
-          Calculate_CFF(mean_Q2[ii][jj][kk], mean_x[ii][jj][kk], -1.0*mean_t[ii][jj][kk], 
+          Calculate_CFF(mean_Q2[ii][jj][kk], mean_x[ii][jj][kk], -1.0*mean_t_0[ii][jj][kk], mean_y[ii][jj][kk], 
                         A0, A1, A2, A3, c0_BH, c1_BH, c2_BH);
 
           
@@ -472,11 +590,13 @@ outfile.close();
      
         double IM_CFF; ;
         double RE_CFF;;
-        Find_CFF(mean_x[ii][jj][kk], abs(mean_t[ii][jj][kk]), IM_CFF, RE_CFF, jj);
+        Find_CFF(mean_x[ii][jj][kk], abs(mean_t_0[ii][jj][kk]), IM_CFF, RE_CFF, jj);
           
         alu_t_x[ii][jj][kk] = 0.1 *(2-jj)-0.3;
-        Im_t_x[ii][jj][kk] = IM_CFF;
-        Re_t_x[ii][jj][kk] = RE_CFF;
+        Im_t_x[ii][jj][kk] = 0.013*modle_Im[ii][jj][kk];
+        Re_t_x[ii][jj][kk] = modle_Re[ii][jj][kk];
+        //Im_t_x[ii][jj][kk] = IM_CFF;
+        //Re_t_x[ii][jj][kk] = RE_CFF;
 
         //
         // alu_t_x_err[ii][jj][kk] =  myfit->GetParError(0);
@@ -512,14 +632,22 @@ outfile.close();
 
   for(int ii=0; ii<n_xB; ii++){
 
-    cout<<ii<<"    "<<hh_xB[ii]   ->GetMean()<<endl;
-    M_XB[ii]= (hh_xB[ii]->GetMean());
-    M_Q2[ii]= (hh_Q2[ii]->GetMean());
+    M_XB[ii]= (hh_xB_0[ii]->GetMean());
+    M_Q2[ii]= (hh_Q2_0[ii]->GetMean());
    }
 
-//    plot_ALU_projections(mean_t, mean_t_err, alu_t_x, alu_t_x_err);
-//    plot_CFF_projections(mean_t, mean_t_err, Im_t_x_err, Re_t_x_err);
-    FunProfile(mean_t, mean_t_err, M_XB, M_Q2, Im_t_x, Im_t_x_err);
+//    plot_ALU_projections(mean_t_0, mean_t_0_err, alu_t_x, alu_t_x_err);
+//    plot_CFF_projections(mean_t_0, mean_t_0_err, Im_t_x_err, Re_t_x_err);
+    FunProfile_0(mean_t_0, mean_t_0_err, M_XB, M_Q2, Im_t_x, Im_t_x_err);
+
+
+
+
+
+
+
+
+
 
 }
 
@@ -535,7 +663,7 @@ void Find_CFF( double xB, double t, double &Im, double &Re, int n_xB){
 
 
 
-void Calculate_CFF(double Q2, double xB, double t, 
+void Calculate_CFF(double Q2, double xB, double t, double y, 
                    double &A0, double &A1, double &A2, double &A3, 
                    double &c0_BH, double &c1_BH, double &c2_BH)
   {
@@ -549,7 +677,7 @@ void Calculate_CFF(double Q2, double xB, double t,
 
   double xA = xB*MPROT/MALPH;
   double xA1= 1 - xA;
-  double y = Q2/2/MALPH/xA/EBEAM;
+  //double y = Q2/2/MALPH/xA/EBEAM;
   double e = 2*xA*MALPH/sqrt(Q2); // epsilon
   double e2 = e*e;
   double T0 = -Q2 * (2*xA1*(1-sqrt(1+e2))+e2) / (4*xA*xA1 + e2);
@@ -559,9 +687,9 @@ void Calculate_CFF(double Q2, double xB, double t,
   double dt = (t - T0)/Q2;
   double K_hat = sqrt(T0 - t) * sqrt(xA1*sqrt(1+e2) + (T0 - t)*(e2 + 4*xA1*xA)/(4*Q2) );
   double K2 = -1.0*dt * xA1 * (1 -y - y*y*e2/4) * (sqrt(1+e2) + ((4*xA*xA1+e2)*dt/(4*xA1)) );
-  //double K = sqrt(1 - y + e2*y*y/4)* (K_hat)/(sqrt(Q2));
+  double K = sqrt(1 - y + e2*y*y/4)* (K_hat)/(sqrt(Q2));
   //double K2 = K*K;
-  double K = sqrt(-1.0*K2);
+  //double K = sqrt(-1.0*K2);
 
   // BH propagators
   double P1_phi = -1.0*(J + 2*K*cos(PI-phi)) / (y * (1+e2));
@@ -595,7 +723,7 @@ void Calculate_CFF(double Q2, double xB, double t,
 
 
    A0 = xA* pow(1+e2, 2) * S_INT_plus_plus_1/y;
-   A1 = 2*xA*xA*t*((1+e2)/Q2) * (2-2*y+y*y + e2*y*y/2) * P1_phi * P2_phi * C_DVCS_0; 
+   A1 = xA*xA*t*(pow((1+e2),2)/Q2) * P1_phi * P2_phi * C_DVCS_0; 
    A2 = xA*pow(1+e2,2) * C_INT_plus_plus_0 /y;  
    A3 = xA* pow(1+e2,2) * C_INT_plus_plus_1/y; 
 
@@ -620,7 +748,7 @@ return RunNumber;
 }
 
 
-void Calculate_ALU(double Q2, double xB, double t, double phi , double Im, double Re, double &ALU)
+void Calculate_ALU(double Q2, double xB, double t, double y, double phi , double Im, double Re, double &ALU)
   {
 
   double PI = 3.1416;
@@ -629,10 +757,15 @@ void Calculate_ALU(double Q2, double xB, double t, double phi , double Im, doubl
   double MPROT = 0.93827;
   double MALPH = 3.7274;
   double EBEAM = 18.0;
+  double EHad = 220.0; 
 
   double xA = xB*MPROT/MALPH;
   double xA1= 1 - xA;
-  double y = Q2/2/MALPH/xA/EBEAM;
+  //double y = Q2/2/MALPH/xA/EBEAM;
+
+  double s = MALPH*MALPH +2.0*EBEAM*(EHad+sqrt(EHad*EHad-MALPH*MALPH));
+  double yy = Q2/(s-MALPH*MALPH)/xA;
+  //cout<< y<<"     "<<yy<<endl;
   double e = 2*xA*MALPH/sqrt(Q2); // epsilon
   double e2 = e*e;
   double T0 = -Q2 * (2*xA1*(1-sqrt(1+e2))+e2) / (4*xA*xA1 + e2);
@@ -642,9 +775,9 @@ void Calculate_ALU(double Q2, double xB, double t, double phi , double Im, doubl
   double dt = (t - T0)/Q2;
   double K_hat = sqrt(T0 - t) * sqrt(xA1*sqrt(1+e2) + (T0 - t)*(e2 + 4*xA1*xA)/(4*Q2) );
   double K2 = -1.0*dt * xA1 * (1 -y - y*y*e2/4) * (sqrt(1+e2) + ((4*xA*xA1+e2)*dt/(4*xA1)) );
-  //double K = sqrt(1 - y + e2*y*y/4)* (K_hat)/(sqrt(Q2));
+  double K = sqrt(1 - y + e2*y*y/4)* (K_hat)/(sqrt(Q2));
   //double K2 = K*K;
-  double K = sqrt(-1.0*K2);
+  //double K = sqrt(-1.0*K2);
 
   // BH propagators
   double P1_phi = -1.0*(J + 2*K*cos(PI-phi)) / (y * (1+e2));
@@ -678,12 +811,12 @@ void Calculate_ALU(double Q2, double xB, double t, double phi , double Im, doubl
 
 
   double A0 = xA* pow(1+e2, 2) * S_INT_plus_plus_1/y;
-  double A1 = 2*xA*xA*t*((1+e2)/Q2) * (2-2*y+y*y + e2*y*y/2) * P1_phi * P2_phi * C_DVCS_0; 
+  double A1 = xA*xA*t*(pow((1+e2),2)/Q2) * P1_phi * P2_phi * C_DVCS_0; 
   double A2 = xA*pow(1+e2,2) * C_INT_plus_plus_0 /y;  
   double A3 = xA* pow(1+e2,2) * C_INT_plus_plus_1/y; 
 
-   ALU =  -A0* Im* sin(phi)/ (c0_BH + c1_BH*cos(phi) + c2_BH*cos(2*phi) + A1*(Re*Re + Im*Im) + A2*Re + A3*Re * cos(phi));
-   //cout<<">>   "<<Im<<"    "<<Re<<"    "<<ALU<<endl;
+   ALU =  A0* Im* sin(phi)/ (c0_BH + c1_BH*cos(phi) + c2_BH*cos(2*phi) + A1*(Re*Re + Im*Im) + A2*Re + A3*Re * cos(phi));
 }
+
 
 
