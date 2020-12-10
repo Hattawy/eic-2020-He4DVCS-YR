@@ -94,9 +94,9 @@ analysis_dvcs_4He_t::analysis_dvcs_4He_t(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("ch","analysis_dvcs_4He_t");
-      //chain->Add("/work/clas12/mhattawy/he4_eic_dvcs_events/Out-EIChigh-*.root/TOPEG");
-      chain->Add("/work/clas12/mhattawy/he4_eic_dvcs_events/Out-EIChigh-M3-Nh-002.root/TOPEG");
-      chain->Add("/work/clas12/mhattawy/he4_eic_dvcs_events/Out-EIChigh-M3-Ph-001.root/TOPEG");
+      chain->Add("/work/clas12/mhattawy/he4_eic_dvcs_events/Out-EIChigh-*.root/TOPEG");
+      //chain->Add("/work/clas12/mhattawy/he4_eic_dvcs_events/Out-EIChigh-M3-Nh-002.root/TOPEG");
+      //chain->Add("/work/clas12/mhattawy/he4_eic_dvcs_events/Out-EIChigh-M3-Ph-001.root/TOPEG");
       tree = chain;
 #endif // SINGLE_TREE
 

@@ -8,7 +8,7 @@ void FunProfile_1(vector<vector<vector<double>>> mean_t,
 
 
 const int n_xB=9; // number of bins in xB
-const int n_t = 14; // number of bins in -t
+const int n_t = 8; // number of bins in -t
 int npt[n_xB];  // number of -t bind in each bin in xB
 double X[n_xB];
 double XX[n_xB];

@@ -63,7 +63,8 @@ void analysis_dvcs_4He_t::Loop()
       gStyle->SetLabelSize(0.05,"xy");
       gStyle->SetTitleSize(0.06,"xy");
   
-      const double xfac = 0.01;
+      const double xfac = 0.1;
+      const double sys_fac = 0.0;
 
       const int n_con = 1;
       const int n_xB = 9;
@@ -521,7 +522,11 @@ outfile.close();
                   Calculate_ALU(mean_Q2[ii][jj][kk], mean_x[ii][jj][kk], -1.0*mean_t_0[ii][jj][kk], mean_y[ii][jj][kk],  phi_hh, Im, Re, ALU_phi); 
 
                   hasy->SetBinContent(mm, ALU_phi);
-                  cout<<hasy->GetBinCenter(mm)<<"    "<< hasy->GetBinContent(mm)<<endl;
+                  double bin_error_st = hasy->GetBinError(mm);
+                  double bin_error_sys = sys_fac*ALU_phi; 
+                  double bin_error_all = bin_error_st + bin_error_sys; 
+                  hasy->SetBinError(mm, bin_error_all); 
+                  cout<<hasy->GetBinCenter(mm)<<"    "<< hasy->GetBinContent(mm)<<"     "<<bin_error_st<<"     "<<hasy->GetBinError(mm)<<endl;
               }
 
 
@@ -827,7 +832,12 @@ outfile.close();
                   Calculate_ALU(mean_Q2_1[ii][jj][kk], mean_x_1[ii][jj][kk], -1.0*mean_t_1[ii][jj][kk], mean_y_1[ii][jj][kk],  phi_hh, Im, Re, ALU_phi); 
 
                   hasy->SetBinContent(mm, ALU_phi);
-                  cout<<hasy->GetBinCenter(mm)<<"    "<< hasy->GetBinContent(mm)<<endl;
+                  double bin_error_st = hasy->GetBinError(mm);
+                  double bin_error_sys = sys_fac*ALU_phi; 
+                  double bin_error_all = bin_error_st + bin_error_sys; 
+                  hasy->SetBinError(mm, bin_error_all); 
+                  cout<<hasy->GetBinCenter(mm)<<"    "<< hasy->GetBinContent(mm)<<"     "<<bin_error_st<<"     "<<hasy->GetBinError(mm)<<endl;
+              
               }
 
 
@@ -856,7 +866,7 @@ outfile.close();
                   l3->Draw("same");
 
           double  A0, A1, A2, A3, c0_BH, c1_BH, c2_BH; 
-          Calculate_CFF(mean_Q2[ii][jj][kk], mean_x[ii][jj][kk], -1.0*mean_t_0[ii][jj][kk], mean_y[ii][jj][kk], 
+          Calculate_CFF(mean_Q2_1[ii][jj][kk], mean_x_1[ii][jj][kk], -1.0*mean_t_1[ii][jj][kk], mean_y_1[ii][jj][kk], 
                         A0, A1, A2, A3, c0_BH, c1_BH, c2_BH);
 
           
@@ -873,7 +883,7 @@ outfile.close();
      
         double IM_CFF; ;
         double RE_CFF;;
-        Find_CFF(mean_x[ii][jj][kk], abs(mean_t_0[ii][jj][kk]), IM_CFF, RE_CFF, jj);
+        Find_CFF(mean_x[ii][jj][kk], abs(mean_t_1[ii][jj][kk]), IM_CFF, RE_CFF, jj);
           
         alu_t_x_1[ii][jj][kk] = 0.1 *(2-jj)-0.3;
         Im_t_x_1[ii][jj][kk] = 0.013*modle_Im_1[ii][jj][kk];
@@ -1124,7 +1134,12 @@ outfile.close();
                   Calculate_ALU(mean_Q2_2[ii][jj][kk], mean_x_2[ii][jj][kk], -1.0*mean_t_2[ii][jj][kk], mean_y_2[ii][jj][kk],  phi_hh, Im, Re, ALU_phi); 
 
                   hasy->SetBinContent(mm, ALU_phi);
-                  cout<<hasy->GetBinCenter(mm)<<"    "<< hasy->GetBinContent(mm)<<endl;
+                  double bin_error_st = hasy->GetBinError(mm);
+                  double bin_error_sys = sys_fac*ALU_phi; 
+                  double bin_error_all = bin_error_st + bin_error_sys; 
+                  hasy->SetBinError(mm, bin_error_all); 
+                  cout<<hasy->GetBinCenter(mm)<<"    "<< hasy->GetBinContent(mm)<<"     "<<bin_error_st<<"     "<<hasy->GetBinError(mm)<<endl;
+ 
               }
 
 
@@ -1153,7 +1168,7 @@ outfile.close();
                   l3->Draw("same");
 
           double  A0, A1, A2, A3, c0_BH, c1_BH, c2_BH; 
-          Calculate_CFF(mean_Q2[ii][jj][kk], mean_x[ii][jj][kk], -1.0*mean_t_0[ii][jj][kk], mean_y[ii][jj][kk], 
+          Calculate_CFF(mean_Q2_2[ii][jj][kk], mean_x_2[ii][jj][kk], -1.0*mean_t_2[ii][jj][kk], mean_y_2[ii][jj][kk], 
                         A0, A1, A2, A3, c0_BH, c1_BH, c2_BH);
 
           
