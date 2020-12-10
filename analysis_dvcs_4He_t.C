@@ -616,8 +616,8 @@ outfile.close();
           double ALU_fit_err = err[0];
 
           alu_t_x_err[ii][jj][kk] =  ALU_fit_err;
-          Im_t_x_err[ii][jj][kk]  = ffit->GetParError(0); 
-          Re_t_x_err[ii][jj][kk]  = ffit->GetParError(1);          
+          Im_t_x_err[ii][jj][kk]  = 0.01 * ffit->GetParError(0); 
+          Re_t_x_err[ii][jj][kk]  = 0.01 * ffit->GetParError(1);          
 
           }
     }
@@ -934,8 +934,8 @@ outfile.close();
           double ALU_fit_err = err[0];
 
           alu_t_x_1_err[ii][jj][kk] =  ALU_fit_err;
-          Im_t_x_1_err[ii][jj][kk]  = ffit->GetParError(0); 
-          Re_t_x_1_err[ii][jj][kk]  = ffit->GetParError(1);          
+          Im_t_x_1_err[ii][jj][kk]  = 0.01 * ffit->GetParError(0); 
+          Re_t_x_1_err[ii][jj][kk]  = 0.01 * ffit->GetParError(1);          
 
           }
     }
@@ -1249,8 +1249,8 @@ outfile.close();
           double ALU_fit_err = err[0];
 
           alu_t_x_2_err[ii][jj][kk] =  ALU_fit_err;
-          Im_t_x_2_err[ii][jj][kk]  = ffit->GetParError(0); 
-          Re_t_x_2_err[ii][jj][kk]  = ffit->GetParError(1);          
+          Im_t_x_2_err[ii][jj][kk]  = 0.01 * ffit->GetParError(0); 
+          Re_t_x_2_err[ii][jj][kk]  = 0.01 * ffit->GetParError(1);          
 
           }
     }

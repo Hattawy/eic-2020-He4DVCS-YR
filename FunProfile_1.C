@@ -241,7 +241,7 @@ const int Npx = 100;
     {
       gb[point] = X0 + (point+0.5)*(X1-X0)/Npx;
       gr[point]  = (profile_fun2d[ifit]->Eval(gb[point]));
-      gdr[point] = 0.013 *(TMath::Abs(Hprofile_fun2d[ifit]->Eval(gb[point])-profile_fun2d[ifit]->Eval(gb[point])));
+      gdr[point] = (TMath::Abs(Hprofile_fun2d[ifit]->Eval(gb[point])-profile_fun2d[ifit]->Eval(gb[point])));
      }
 
     profile_G2D[ifit] = new TGraphErrors(Npx,gb,gr,0,gdr);
