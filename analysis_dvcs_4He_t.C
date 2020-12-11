@@ -63,8 +63,11 @@ void analysis_dvcs_4He_t::Loop()
       gStyle->SetLabelSize(0.05,"xy");
       gStyle->SetTitleSize(0.06,"xy");
   
-      const double xfac = 0.1;
-      const double sys_fac = 0.0;
+      const double xfac = 1.0/sqrt(50000.0/22.0);
+      const double sys_fac = 0.01;
+      const double fac_0 =0.012;
+      const double fac_1 =0.0145;
+      const double fac_2 =0.02175;
 
       const int n_con = 1;
       const int n_xB = 9;
@@ -581,7 +584,7 @@ outfile.close();
         Find_CFF(mean_x[ii][jj][kk], abs(mean_t_0[ii][jj][kk]), IM_CFF, RE_CFF, jj);
           
         alu_t_x[ii][jj][kk] = 0.1 *(2-jj)-0.3;
-        Im_t_x[ii][jj][kk] = 0.013*modle_Im[ii][jj][kk];
+        Im_t_x[ii][jj][kk] = fac_0*modle_Im[ii][jj][kk];
         Re_t_x[ii][jj][kk] = modle_Re[ii][jj][kk];
         //Im_t_x[ii][jj][kk] = IM_CFF;
         //Re_t_x[ii][jj][kk] = RE_CFF;
@@ -886,7 +889,7 @@ outfile.close();
         Find_CFF(mean_x[ii][jj][kk], abs(mean_t_1[ii][jj][kk]), IM_CFF, RE_CFF, jj);
           
         alu_t_x_1[ii][jj][kk] = 0.1 *(2-jj)-0.3;
-        Im_t_x_1[ii][jj][kk] = 0.013*modle_Im_1[ii][jj][kk];
+        Im_t_x_1[ii][jj][kk] = fac_1*modle_Im_1[ii][jj][kk];
         Re_t_x_1[ii][jj][kk] = modle_Re_1[ii][jj][kk];
         //Im_t_x[ii][jj][kk] = IM_CFF;
         //Re_t_x[ii][jj][kk] = RE_CFF;
@@ -1188,7 +1191,7 @@ outfile.close();
         Find_CFF(mean_x[ii][jj][kk], abs(mean_t_0[ii][jj][kk]), IM_CFF, RE_CFF, jj);
           
         alu_t_x_2[ii][jj][kk] = 0.1 *(2-jj)-0.3;
-        Im_t_x_2[ii][jj][kk] = 0.013*modle_Im_2[ii][jj][kk];
+        Im_t_x_2[ii][jj][kk] = fac_2*modle_Im_2[ii][jj][kk];
         Re_t_x_2[ii][jj][kk] = modle_Re_2[ii][jj][kk];
         //Im_t_x[ii][jj][kk] = IM_CFF;
         //Re_t_x[ii][jj][kk] = RE_CFF;

@@ -293,7 +293,7 @@ const int Npx = 100;
          comments->SetTextSize(0.06);
          //comments->DrawLatex(-0.7,-2.8,"x_{B}");
          comments->DrawLatex(-1.5,-3.22,"b_{#perp}  (fm)");
-         comments->DrawLatex(-2.2,-2.42,"#rho(fm^{-2})");
+         comments->DrawLatex(-2.2,-2.55,"#rho(fm^{-2})");
          //comments->SetTextAngle(28);
          comments->SetTextSize(0.055);
          //comments->DrawLatex(-1.8,-1.96,"^{4}He quark density profiles");

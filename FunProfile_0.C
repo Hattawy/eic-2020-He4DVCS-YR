@@ -180,7 +180,7 @@ const int Npx = 100;
   }
      zaxis = new TGaxis(X0,Z0,X1,Z1,0,0.50,605);
      zaxis->SetLineWidth(3);
-     zaxis->Draw("same");
+     //zaxis->Draw("same");
  
   // rho division lines 
                for(int idiv=1;idiv<6;idiv++)
@@ -208,7 +208,7 @@ const int Npx = 100;
              l2->Draw("same");
      }
      else {
-     TLatex *l2= new TLatex(X1-0.27, Z0+0.01,Form("x_{B}= %0.4f",XX[idiv]));
+     TLatex *l2= new TLatex(X1-0.27, Z0+0.02,Form("x_{B}= %0.4f",XX[idiv]));
              l2->SetTextSize(0.035);
              l2->Draw("same");
  
@@ -216,7 +216,7 @@ const int Npx = 100;
  
 
   }
-     baxis->Draw("same");
+     //baxis->Draw("same");
 
 
  TF1 *profile_fun2d[n_t], *Hprofile_fun2d[n_t];
@@ -278,10 +278,10 @@ const int Npx = 100;
          comments->SetTextSize(0.06);
          //comments->DrawLatex(-0.7,-2.8,"x_{B}");
          comments->DrawLatex(-1.5,-3.22,"b_{#perp}  (fm)");
-         comments->DrawLatex(-2.2,-2.42,"#rho(fm^{-2})");
+         comments->DrawLatex(-2.2,-2.35,"#rho (fm^{-2})");
          //comments->SetTextAngle(28);
          comments->SetTextSize(0.055);
-         comments->DrawLatex(-1.5,-1.8,"^{4}He Quark Density Profiles");
+         //comments->DrawLatex(-1.5,-1.8,"^{4}He Quark Density Profiles");
 
    TLegend* leg = new TLegend(0.75,0.75,0.97,0.970);
    leg-> SetNColumns(2);
